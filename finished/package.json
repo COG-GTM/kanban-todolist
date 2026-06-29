@@ -1,0 +1,12 @@
+{
+  "name": "kanban-todolist",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Client-side Kanban todo list with optional Devin session integration served by a zero-dependency Node backend proxy.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
