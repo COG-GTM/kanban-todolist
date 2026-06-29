@@ -135,9 +135,14 @@
             const isProgress = task.column === 'progress';
             const isTodo = task.column === 'todo';
 
+            const devinPill = task.devinSessionId
+                ? `<span class="devin-status-pill devin-${devinStatusLabel(task)}" title="Devin session status"><i class="fas fa-robot"></i> ${devinStatusLabel(task)}</span>`
+                : '';
+
             const headerHTML = `
                 <div class="task-header">
                     <span class="badge-priority ${task.priority}" onclick="openBadgePriorityMenu(event, '${task.id}')">${task.priority}</span>
+                    ${devinPill}
                     <span class="task-time">${formatRelativeTime(task.createdAt)}</span>
                 </div>
             `;
@@ -172,12 +177,23 @@
                 ? `<button class="btn-card-action" onclick="openEditModal('${task.id}')" title="Edit Task"><i class="fas fa-pencil-alt"></i></button>` 
                 : '';
 
+            // Devin integration controls: "Run with Devin" on fresh To Do tasks,
+            // and an always-available "Open Devin session" button once a session exists.
+            const runDevinButton = (isTodo && !task.devinSessionId)
+                ? `<button class="btn-card-action btn-devin" onclick="openDevinModal('${task.id}')" title="Run with Devin"><i class="fas fa-robot"></i></button>`
+                : '';
+            const openDevinButton = task.devinSessionId
+                ? `<button class="btn-card-action btn-devin-open" onclick="openDevinSession('${task.id}')" title="Open Devin session"><i class="fas fa-arrow-up-right-from-square"></i></button>`
+                : '';
+
             const footerHTML = `
                 <div class="task-footer">
                     <div class="card-actions-left">
                         <button class="btn-card-action" onclick="openViewModal('${task.id}')" title="View Details"><i class="fas fa-expand-alt"></i></button>
                         ${editButton}
                         ${tickButton}
+                        ${runDevinButton}
+                        ${openDevinButton}
                     </div>
                     <div class="card-nav-arrows">
                         ${navArrowsHTML}

@@ -64,20 +64,6 @@
             }
         ];
 
-        // ==========================================
-        // SYSTEM BOOTSTRAP AND LIFECYCLE MANAGEMENT
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            loadFromStorage();
-            setupEventListeners();
-            render();
-            
-            // Keeps card timestamp relative text accurate without forcing database/DOM rebuilds
-            setInterval(() => {
-                renderTimestampsOnly();
-            }, 30000);
-        });
-
         // Pull state from browser local persistence tier
         function loadFromStorage() {
             const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
