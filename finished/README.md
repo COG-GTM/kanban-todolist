@@ -31,6 +31,7 @@ If our project adds value to your day or if you’re simply a fan of cool, open-
 - Smart Right-Click Context Menu: Fast, desktop-like mouse controls to view, edit, move, or delete tasks.
 - Advanced Sorting and Filtering: Real-time search indexing, priority filters, and chronological sorting utilities.
 - Local Persistence: Instant state preservation using local browser storage (localStorage) under the "todolist" key.
+- Backup & Restore: Export all tasks to a JSON file and import them back later, so the board is never trapped in a single browser's localStorage. Importing validates the file and (when tasks already exist) asks for confirmation before replacing the board.
 - Dynamic Time Tracking: Tracks task creation and last-modified timestamps with relative "time ago" formatting.
 - Run with Devin (optional): Kick off a [Devin](https://devin.ai) session from any To Do card. The task moves to In Progress, a global poll tracks the session, and the task auto-moves to Done when the session reaches a terminal state. The associated session is always one click away via "Open Devin session". Requires running the optional backend server (see below).
 
@@ -51,6 +52,7 @@ The application is plain HTML, CSS, and Vanilla JavaScript with **no build step*
     ├── render.js       # Board render engine and task card DOM generation
     ├── tasks.js        # Add / move / edit / delete / complete task logic
     ├── menus.js        # Right-click context menu + priority badge dropdown
+    ├── backup.js       # JSON export / import (backup & restore) of tasks
     ├── events.js       # Event listener wiring (inputs, filters, drag & drop)
     ├── devin.js        # Optional "Run with Devin" integration (modal + global poll)
     └── main.js         # Bootstrap on DOMContentLoaded

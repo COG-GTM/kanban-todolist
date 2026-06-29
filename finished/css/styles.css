@@ -192,6 +192,26 @@
             border-color: #fca5a5;
         }
 
+        .btn-bulk-neutral {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-smooth);
+        }
+        .btn-bulk-neutral:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: var(--text-primary);
+        }
+
         /* ==========================================================================
            5. INLINE TASK CREATION ENGINE (MODAL-LESS ADDING INTERFACE)
            ========================================================================== */
@@ -1080,7 +1100,8 @@
                 height: 36px;
             }
 
-            .btn-bulk-danger {
+            .btn-bulk-danger,
+            .btn-bulk-neutral {
                 width: 100%;
                 font-size: 0.8rem;
                 padding: 6px 8px;

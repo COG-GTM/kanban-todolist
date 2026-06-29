@@ -46,6 +46,14 @@
                     <option value="title-asc">Title (A-Z)</option>
                 </select>
 
+                <button id="exportTasksBtn" class="btn-bulk-neutral" title="Export tasks to a JSON backup file">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+                <button id="importTasksBtn" class="btn-bulk-neutral" title="Import tasks from a JSON backup file">
+                    <i class="fas fa-file-import"></i> Import
+                </button>
+                <input type="file" id="importFileInput" accept="application/json,.json" hidden>
+
                 <button id="clearCompletedBtn" class="btn-bulk-danger" title="Clear completed tasks">
                     <i class="fas fa-check-double"></i> Clean Done
                 </button>
@@ -311,6 +319,7 @@
     <script src="js/render.js"></script>
     <script src="js/tasks.js"></script>
     <script src="js/menus.js"></script>
+    <script src="js/backup.js"></script>
     <script src="js/devin.js"></script>
     <script src="js/events.js"></script>
     <script src="js/main.js"></script>

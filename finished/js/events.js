@@ -106,6 +106,20 @@
                 }
             });
 
+            // Backup / restore (JSON export & import) triggers
+            document.getElementById('exportTasksBtn').addEventListener('click', exportTasks);
+
+            const importFileInput = document.getElementById('importFileInput');
+            document.getElementById('importTasksBtn').addEventListener('click', () => {
+                importFileInput.click();
+            });
+            importFileInput.addEventListener('change', async (e) => {
+                const file = e.target.files && e.target.files[0];
+                await importTasksFromFile(file);
+                // Reset so re-selecting the same file still fires a change event
+                e.target.value = '';
+            });
+
             // Mobile segmented Navigation button mapping
             const mobileTabBtns = document.querySelectorAll('.mobile-tab-btn');
             mobileTabBtns.forEach(btn => {
