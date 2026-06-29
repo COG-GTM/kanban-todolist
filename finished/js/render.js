@@ -135,9 +135,18 @@
             const isProgress = task.column === 'progress';
             const isTodo = task.column === 'todo';
 
-            const devinPill = task.devinSessionId
-                ? `<span class="devin-status-pill devin-${devinStatusLabel(task)}" title="Devin session status"><i class="fas fa-robot"></i> ${devinStatusLabel(task)}</span>`
-                : '';
+            let devinPill = '';
+            if (task.devinSessionId) {
+                const working = isDevinWorking(task);
+                const label = devinStatusLabel(task);
+                const labelSlug = label.replace(/\s+/g, '-').toLowerCase();
+                const pillIcon = working ? 'fa-spinner fa-spin' : 'fa-robot';
+                const workingClass = working ? ' devin-working' : '';
+                const clickableClass = task.devinSessionUrl ? ' devin-clickable' : '';
+                const pillTitle = task.devinSessionUrl ? 'Open Devin session' : 'Devin session status';
+                const clickAttr = task.devinSessionUrl ? ` onclick="openDevinSession('${task.id}')"` : '';
+                devinPill = `<span class="devin-status-pill devin-${labelSlug}${workingClass}${clickableClass}" title="${pillTitle}"${clickAttr}><i class="fas ${pillIcon}"></i> ${label}</span>`;
+            }
 
             const headerHTML = `
                 <div class="task-header">
@@ -158,42 +167,29 @@
             } else if (isProgress) {
                 navArrowsHTML = `
                     <button class="btn-arrow" onclick="moveTask('${task.id}', 'todo')" title="Move back to To Do"><i class="fas fa-arrow-left"></i></button>
-                    <button class="btn-arrow" onclick="moveTask('${task.id}', 'done')" style="display:none;"></button>
+                    <button class="btn-arrow" onclick="moveTask('${task.id}', 'done')" title="Move to Done"><i class="fas fa-arrow-right"></i></button>
                 `;
             } else if (isDone) {
                 navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move back to In Progress"><i class="fas fa-arrow-left"></i></button>`;
             }
 
-            let tickButton = '';
-            if (isProgress) {
-                tickButton = `
-                    <button class="btn-card-action btn-tick" onclick="toggleTaskComplete('${task.id}')" title="Mark as Completed">
-                        <i class="${task.completed ? 'fas' : 'far'} fa-check-circle"></i>
-                    </button>
-                `;
+            // Edit/details button: opens the combined modal (read-only for Done).
+            const editButton = `<button class="btn-card-action" onclick="openTaskModal('${task.id}')" title="${isDone ? 'View Task' : 'Edit Task'}"><i class="fas ${isDone ? 'fa-expand-alt' : 'fa-pencil-alt'}"></i></button>`;
+
+            // Devin button: "Run with Devin" on fresh To Do cards, or "Open Devin
+            // session" once a session exists. Both carry a descriptive tooltip.
+            let devinButton = '';
+            if (devinEnabled && isTodo && !task.devinSessionId) {
+                devinButton = `<button class="btn-card-action btn-devin" onclick="openDevinModal('${task.id}')" title="Run with Devin"><i class="fas fa-robot"></i></button>`;
+            } else if (task.devinSessionId) {
+                devinButton = `<button class="btn-card-action btn-devin-open" onclick="openDevinSession('${task.id}')" title="Open Devin session"><i class="fas fa-arrow-up-right-from-square"></i></button>`;
             }
-
-            const editButton = !isDone 
-                ? `<button class="btn-card-action" onclick="openEditModal('${task.id}')" title="Edit Task"><i class="fas fa-pencil-alt"></i></button>` 
-                : '';
-
-            // Devin integration controls: "Run with Devin" on fresh To Do tasks,
-            // and an always-available "Open Devin session" button once a session exists.
-            const runDevinButton = (isTodo && !task.devinSessionId)
-                ? `<button class="btn-card-action btn-devin" onclick="openDevinModal('${task.id}')" title="Run with Devin"><i class="fas fa-robot"></i></button>`
-                : '';
-            const openDevinButton = task.devinSessionId
-                ? `<button class="btn-card-action btn-devin-open" onclick="openDevinSession('${task.id}')" title="Open Devin session"><i class="fas fa-arrow-up-right-from-square"></i></button>`
-                : '';
 
             const footerHTML = `
                 <div class="task-footer">
                     <div class="card-actions-left">
-                        <button class="btn-card-action" onclick="openViewModal('${task.id}')" title="View Details"><i class="fas fa-expand-alt"></i></button>
                         ${editButton}
-                        ${tickButton}
-                        ${runDevinButton}
-                        ${openDevinButton}
+                        ${devinButton}
                     </div>
                     <div class="card-nav-arrows">
                         ${navArrowsHTML}

@@ -70,8 +70,36 @@
                 render();
             });
 
-            // Bulk operation triggers
-            document.getElementById('clearCompletedBtn').addEventListener('click', async () => {
+            // Header "Actions" dropdown — toggles the bulk-operations menu.
+            const headerActionsBtn = document.getElementById('headerActionsBtn');
+            const headerActionsMenu = document.getElementById('headerActionsMenu');
+            headerActionsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                headerActionsMenu.classList.toggle('hidden');
+            });
+            // Close the dropdown when clicking anywhere outside of it.
+            document.addEventListener('click', (e) => {
+                if (!headerActionsMenu.contains(e.target) && e.target !== headerActionsBtn) {
+                    headerActionsMenu.classList.add('hidden');
+                }
+            });
+
+            // Bulk operation triggers (inside the header Actions dropdown)
+            document.getElementById('actLoadDemo').addEventListener('click', async () => {
+                headerActionsMenu.classList.add('hidden');
+                const confirmed = await requestConfirmation(
+                    'Load Sample Data',
+                    'This will delete all existing tasks and replace them with sample data. Continue?'
+                );
+                if (confirmed) {
+                    loadDemoData();
+                    render();
+                    showToast('Board repopulated with sample data.', 'success');
+                }
+            });
+
+            document.getElementById('actCleanDone').addEventListener('click', async () => {
+                headerActionsMenu.classList.add('hidden');
                 const completedCount = state.tasks.filter(t => t.completed).length;
                 if (completedCount === 0) {
                     showToast('There are no completed tasks to clear.', 'warning');
@@ -89,7 +117,8 @@
                 }
             });
 
-            document.getElementById('clearAllBtn').addEventListener('click', async () => {
+            document.getElementById('actCleanAll').addEventListener('click', async () => {
+                headerActionsMenu.classList.add('hidden');
                 if (state.tasks.length === 0) {
                     showToast('There are no tasks to clear.', 'warning');
                     return;
@@ -132,15 +161,15 @@
 
             document.getElementById('saveEditBtn').addEventListener('click', saveEditedTask);
 
-            // Synchronize edit inputs character counters dynamically
-            const editTitleInput = document.getElementById('editTitleInput');
-            const editTitleCounter = document.getElementById('editTitleCounter');
+            // Synchronize task modal inputs character counters dynamically
+            const editTitleInput = document.getElementById('taskTitleInput');
+            const editTitleCounter = document.getElementById('taskTitleCounter');
             editTitleInput.addEventListener('input', () => {
                 editTitleCounter.textContent = `${40 - editTitleInput.value.length} left`;
             });
 
-            const editDescInput = document.getElementById('editDescInput');
-            const editDescCounter = document.getElementById('editDescCounter');
+            const editDescInput = document.getElementById('taskDescInput');
+            const editDescCounter = document.getElementById('taskDescCounter');
             editDescInput.addEventListener('input', () => {
                 editDescCounter.textContent = `${150 - editDescInput.value.length} left`;
             });

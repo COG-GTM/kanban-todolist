@@ -117,6 +117,7 @@
         }
         .logo .todo-text {
             color: var(--text-secondary);
+            margin-right: 2px;
         }
         .logo .list-text {
             color: var(--primary);
@@ -190,6 +191,26 @@
         .btn-bulk-danger:hover {
             background-color: #fef2f2;
             border-color: #fca5a5;
+        }
+
+        /* Neutral System Action Buttons (non-destructive) */
+        .btn-bulk-neutral {
+            background-color: #fff;
+            border: 1px solid #e0e7ff;
+            color: #6366f1;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-smooth);
+        }
+        .btn-bulk-neutral:hover {
+            background-color: #eef2ff;
+            border-color: #a5b4fc;
         }
 
         /* ==========================================================================
@@ -566,12 +587,32 @@
             background-color: #f1f5f9;
             color: var(--text-primary);
         }
-        .btn-card-action.btn-tick {
-            color: #10b981;
+        /* Header "Actions" dropdown (bulk board operations) */
+        .header-actions-dropdown {
+            position: relative;
+            display: inline-block;
         }
-        .btn-card-action.btn-tick:hover {
-            background-color: #ecfdf5;
+        .header-actions-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            width: 190px;
+            z-index: 9999;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
+        /* Allow the Devin prompt textarea to be resized vertically */
+        #devinPromptInput {
+            resize: vertical;
+            min-height: 80px;
+        }
+
         /* Devin integration controls */
         .btn-card-action.btn-devin {
             color: #6366f1;
@@ -604,7 +645,8 @@
         .devin-status-pill i {
             font-size: 0.6rem;
         }
-        .devin-status-pill.devin-finished {
+        .devin-status-pill.devin-finished,
+        .devin-status-pill.devin-complete {
             background-color: #ecfdf5;
             color: #047857;
         }
@@ -617,6 +659,25 @@
         .devin-status-pill.devin-blocked {
             background-color: #fffbeb;
             color: #b45309;
+        }
+
+        /* Clickable pill: opens the associated Devin session */
+        .devin-status-pill.devin-clickable {
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+        .devin-status-pill.devin-clickable:hover {
+            filter: brightness(0.96);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+        }
+
+        /* Loading state while Devin is actively working on the task */
+        .devin-status-pill.devin-working {
+            animation: devin-pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes devin-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
         }
 
         /* Touch alternative directional controls */
@@ -1080,7 +1141,8 @@
                 height: 36px;
             }
 
-            .btn-bulk-danger {
+            .btn-bulk-danger,
+            .btn-bulk-neutral {
                 width: 100%;
                 font-size: 0.8rem;
                 padding: 6px 8px;

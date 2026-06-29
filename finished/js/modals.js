@@ -43,7 +43,7 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
-            if (modalId === 'editModal') {
+            if (modalId === 'taskModal') {
                 editingTaskId = null;
             }
         }

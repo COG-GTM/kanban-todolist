@@ -1,7 +1,7 @@
         // ==========================================
         // LOCAL STORAGE STORAGE KEY & SYSTEM STATE DECLARATIONS
         // ==========================================
-        const LOCAL_STORAGE_KEY = 'todolist';
+        const LOCAL_STORAGE_KEY = 'daily-task-tracker';
         let state = {
             tasks: [],
             filterPriority: 'all',
@@ -10,12 +10,15 @@
             activeTab: 'todo' // Active tracked tab on responsive mobile viewports
         };
 
-        // Pre-defined engineering-focused tasks used as seed data on initial initialization
-        const demoTasks = [
+        // Pre-defined engineering-focused tasks used as seed data on initial
+        // initialization. Built via a factory so timestamps are always anchored
+        // to "now" — both on first boot and when manually repopulated later.
+        function createDemoTasks() {
+          return [
             {
                 id: 'demo-1',
-                title: 'Set up production CI/CD pipelines',
-                desc: 'Configure automated unit testing suite and Docker builds with GitHub Actions workflow steps.',
+                title: 'Escape HTML in task text',
+                desc: 'Titles and descriptions are injected via innerHTML; sanitize them to prevent HTML/script injection.',
                 priority: 'high',
                 column: 'todo',
                 createdAt: Date.now() - 40 * 60 * 1000, // 40 minutes ago
@@ -24,8 +27,8 @@
             },
             {
                 id: 'demo-2',
-                title: 'Create initial database migrations',
-                desc: 'Design table structures for secure user profiles, task history logs, and relational foreign keys.',
+                title: 'Add undo for deleted tasks',
+                desc: 'Show a toast with an Undo action after deleting or clearing tasks.',
                 priority: 'medium',
                 column: 'todo',
                 createdAt: Date.now() - 15 * 60 * 1000, // 15 minutes ago
@@ -34,9 +37,9 @@
             },
             {
                 id: 'demo-3',
-                title: 'Upgrade JWT security middleware',
-                desc: 'Refactor auth controller logic to enable seamless refresh token rotations and blacklists.',
-                priority: 'high',
+                title: 'Improve keyboard accessibility',
+                desc: 'Let users move and edit cards with the keyboard, and add ARIA roles for screen readers.',
+                priority: 'medium',
                 column: 'progress',
                 createdAt: Date.now() - 3 * 3600 * 1000, // 3 hours ago
                 editedAt: null,
@@ -44,9 +47,9 @@
             },
             {
                 id: 'demo-4',
-                title: 'Write Jest API integration tests',
-                desc: 'Mock payment gateway responses and secure complete checkout payload validations.',
-                priority: 'low',
+                title: 'Add tests for task rules',
+                desc: 'There are no tests yet; add unit tests for the move/add/edit task logic.',
+                priority: 'medium',
                 column: 'progress',
                 createdAt: Date.now() - 6 * 3600 * 1000, // 6 hours ago
                 editedAt: null,
@@ -54,15 +57,16 @@
             },
             {
                 id: 'demo-5',
-                title: 'Configure initial project repository',
-                desc: 'Create boilerplate, strict prettier/eslint configurations, and complete standard environment documentation.',
+                title: 'Export and import tasks as JSON',
+                desc: 'Add backup/restore so the board is not trapped in one browser localStorage.',
                 priority: 'low',
                 column: 'done',
                 createdAt: Date.now() - 25 * 3600 * 1000, // 25 hours ago
                 editedAt: Date.now() - 24 * 3600 * 1000, // Edited 24 hours ago
                 completed: true
             }
-        ];
+          ];
+        }
 
         // Pull state from browser local persistence tier
         function loadFromStorage() {
@@ -76,9 +80,15 @@
                     console.error("Storage loading error:", e);
                 }
             } else {
-                state.tasks = [...demoTasks];
+                state.tasks = createDemoTasks();
                 saveToStorage();
             }
+        }
+
+        // Wipe existing tasks and repopulate the board with fresh demo data.
+        function loadDemoData() {
+            state.tasks = createDemoTasks();
+            saveToStorage();
         }
 
         // Persist dynamic app data structures back to localStorage

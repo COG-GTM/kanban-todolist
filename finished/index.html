@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>todolist</title>
+    <title>Daily Task Tracker</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
         <!-- Header Controls & Branding -->
         <header class="app-header">
             <div class="logo">
-                <span class="todo-text">todo</span><span class="list-text">list</span>
+                <span class="todo-text">Daily</span><span class="list-text"> Task Tracker</span>
             </div>
             
             <div class="header-controls">
@@ -46,12 +46,17 @@
                     <option value="title-asc">Title (A-Z)</option>
                 </select>
 
-                <button id="clearCompletedBtn" class="btn-bulk-danger" title="Clear completed tasks">
-                    <i class="fas fa-check-double"></i> Clean Done
-                </button>
-                <button id="clearAllBtn" class="btn-bulk-danger" title="Clear all tasks">
-                    <i class="fas fa-trash-alt"></i> Clean All
-                </button>
+                <div class="header-actions-dropdown">
+                    <button id="headerActionsBtn" class="btn-bulk-neutral" title="Board actions">
+                        <i class="fas fa-ellipsis-h"></i> Actions
+                    </button>
+                    <div class="header-actions-menu hidden" id="headerActionsMenu">
+                        <div class="context-menu-item" id="actLoadDemo"><i class="fas fa-wand-magic-sparkles"></i> Load Sample Data</div>
+                        <div class="context-divider"></div>
+                        <div class="context-menu-item" id="actCleanDone"><i class="fas fa-check-double"></i> Clean Done</div>
+                        <div class="context-menu-item danger" id="actCleanAll"><i class="fas fa-trash-alt"></i> Clean All</div>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -143,76 +148,30 @@
         </main>
     </div>
 
-    <!-- Footnote Copyright Section -->
-    <footer class="app-footer">
-        © 2026 todolist.
-    </footer>
-
     <!-- ==========================================================================
        MODALS, DROPDOWNS & INTERACTIVE OVERLAYS
        ========================================================================== -->
 
-    <!-- DETAILED VIEW MODAL -->
-    <div class="modal-overlay" id="viewModal">
+    <!-- COMBINED TASK DETAILS / EDIT MODAL -->
+    <div class="modal-overlay" id="taskModal">
         <div class="modal-container">
             <header class="modal-header">
-                <h3 id="viewModalTitle">Task Details</h3>
-                <button class="btn-modal-close" onclick="closeModal('viewModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </header>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Task Title</label>
-                    <p id="viewTaskTitleText" style="font-weight: 600; font-size: 0.95rem; line-height: 1.4; word-break: break-word;"></p>
-                </div>
-                <div class="form-group">
-                    <label>Priority</label>
-                    <div style="display: flex;">
-                        <span id="viewTaskPriorityBadge" class="badge-priority">Low</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <p id="viewTaskDescText" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; word-break: break-word; background: #fafafa; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);"></p>
-                </div>
-                <div class="meta-list">
-                    <div class="meta-item">
-                        <span class="meta-label">Created At:</span>
-                        <span class="meta-value" id="viewTaskCreated"></span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="meta-label">Last Edited:</span>
-                        <span class="meta-value" id="viewTaskEdited"></span>
-                    </div>
-                </div>
-            </div>
-            <footer class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('viewModal')">Close</button>
-            </footer>
-        </div>
-    </div>
-
-    <!-- TASK EDITING MODAL -->
-    <div class="modal-overlay" id="editModal">
-        <div class="modal-container">
-            <header class="modal-header">
-                <h3>Edit Task</h3>
-                <button class="btn-modal-close" onclick="closeModal('editModal')">
+                <h3 id="taskModalTitle">Task Details</h3>
+                <button class="btn-modal-close" onclick="closeModal('taskModal')">
                     <i class="fas fa-times"></i>
                 </button>
             </header>
             <div class="modal-body">
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between;">
-                        <label for="editTitleInput">Task Title *</label>
-                        <span id="editTitleCounter" class="char-counter">40 left</span>
+                        <label for="taskTitleInput">Task Title *</label>
+                        <span id="taskTitleCounter" class="char-counter">40 left</span>
                     </div>
-                    <input type="text" id="editTitleInput" class="form-input" minlength="3" maxlength="40">
+                    <input type="text" id="taskTitleInput" class="form-input" minlength="3" maxlength="40">
                 </div>
                 <div class="form-group">
-                    <label for="editPriorityInput">Priority</label>
-                    <select id="editPriorityInput" class="select-filter" style="width: 100%;">
+                    <label for="taskPriorityInput">Priority</label>
+                    <select id="taskPriorityInput" class="select-filter" style="width: 100%;">
                         <option value="low">Low</option>
                         <option value="medium">Medium</option>
                         <option value="high">High</option>
@@ -220,14 +179,24 @@
                 </div>
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between;">
-                        <label for="editDescInput">Description (Optional)</label>
-                        <span id="editDescCounter" class="char-counter">150 left</span>
+                        <label for="taskDescInput">Description (Optional)</label>
+                        <span id="taskDescCounter" class="char-counter">150 left</span>
                     </div>
-                    <textarea id="editDescInput" class="form-textarea" maxlength="150"></textarea>
+                    <textarea id="taskDescInput" class="form-textarea" maxlength="150"></textarea>
+                </div>
+                <div class="meta-list">
+                    <div class="meta-item">
+                        <span class="meta-label">Created At:</span>
+                        <span class="meta-value" id="taskCreated"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Last Edited:</span>
+                        <span class="meta-value" id="taskEdited"></span>
+                    </div>
                 </div>
             </div>
             <footer class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+                <button class="btn btn-secondary" onclick="closeModal('taskModal')">Close</button>
                 <button class="btn btn-primary" id="saveEditBtn">Save Changes</button>
             </footer>
         </div>
@@ -290,6 +259,9 @@
         <div class="context-menu-item" id="ctxMoveTodo"><i class="fas fa-list"></i> Move to To Do</div>
         <div class="context-menu-item" id="ctxMoveProgress"><i class="fas fa-spinner"></i> Move to Progress</div>
         <div class="context-menu-item" id="ctxMoveDone"><i class="fas fa-check-circle"></i> Move to Done</div>
+        <div class="context-divider" id="ctxDevinDivider"></div>
+        <div class="context-menu-item" id="ctxRunDevin"><i class="fas fa-robot"></i> Run with Devin</div>
+        <div class="context-menu-item" id="ctxOpenDevin"><i class="fas fa-arrow-up-right-from-square"></i> Open Devin session</div>
         <div class="context-divider"></div>
         <div class="context-menu-item danger" id="ctxDelete"><i class="fas fa-trash-alt"></i> Delete Task</div>
     </div>

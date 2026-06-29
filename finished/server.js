@@ -1,5 +1,5 @@
 // ==========================================================================
-// Kanban Todolist — local static server + Devin API proxy
+// Daily Task Tracker — local static server + Devin API proxy
 //
 // Zero-dependency Node server. It:
 //   1. Serves the static app (index.html, css/, js/, assets) from this folder.
@@ -7,7 +7,14 @@
 //      API, injecting the service-user API key from the DEVIN_API_KEY env var
 //      so the key never reaches the browser (and CORS is avoided entirely).
 //
-// Run:  DEVIN_API_KEY=cog_xxx npm start   (or: node server.js)
+// Devin sessions are only created if the deployment is explicitly configured
+// with the organization and the user they should be attributed to:
+//   - DEVIN_ORG_ID    : the org (prefix: org-) sessions are created in
+//   - DEVIN_USER_EMAIL: the email of the org member sessions are created for
+// Both are required (alongside DEVIN_API_KEY). When any is missing the proxy
+// reports Devin as disabled and the frontend hides the "Run with Devin" UI.
+//
+// Run:  DEVIN_API_KEY=cog_xxx DEVIN_ORG_ID=org_xxx DEVIN_USER_EMAIL=you@co.com npm start
 // ==========================================================================
 
 const http = require('http');
@@ -15,13 +22,46 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+// Load variables from a local .env file (if present) into process.env so the
+// app can be configured without exporting vars in the shell. We keep this
+// zero-dependency: use Node's built-in loader when available (>=20.6), and
+// fall back to a tiny parser otherwise. Real environment variables always win.
+function loadEnvFile() {
+    const envPath = path.join(__dirname, '.env');
+    if (!fs.existsSync(envPath)) return;
+    if (typeof process.loadEnvFile === 'function') {
+        try { process.loadEnvFile(envPath); return; } catch (e) { /* fall through */ }
+    }
+    for (const rawLine of fs.readFileSync(envPath, 'utf8').split('\n')) {
+        const line = rawLine.trim();
+        if (!line || line.startsWith('#')) continue;
+        const eq = line.indexOf('=');
+        if (eq === -1) continue;
+        const key = line.slice(0, eq).trim();
+        let val = line.slice(eq + 1).trim();
+        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+        }
+        if (key && process.env[key] === undefined) process.env[key] = val;
+    }
+}
+loadEnvFile();
+
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.DEVIN_API_KEY || '';
+const ORG_ID = process.env.DEVIN_ORG_ID || '';
+const USER_EMAIL = process.env.DEVIN_USER_EMAIL || '';
 const DEVIN_HOST = 'api.devin.ai';
 const ROOT = __dirname;
 
-// org_id is resolved once from the service-user key via GET /v3/self and cached.
-let cachedOrgId = null;
+// Devin session creation is only available when the deployment is fully
+// configured: an API key, the target org, and the user to attribute to.
+function devinEnabled() {
+    return Boolean(API_KEY && ORG_ID && USER_EMAIL);
+}
+
+// The user_id matching DEVIN_USER_EMAIL is resolved once and cached.
+let cachedUserId = null;
 
 function safeParse(s) {
     try { return JSON.parse(s); } catch (e) { return null; }
@@ -55,14 +95,19 @@ function devinRequest(method, apiPath, body) {
     });
 }
 
-async function getOrgId() {
-    if (cachedOrgId) return cachedOrgId;
-    const r = await devinRequest('GET', '/v3/self');
-    if (r.status !== 200) throw new Error(`/v3/self failed (${r.status})`);
-    const self = safeParse(r.body);
-    if (!self || !self.org_id) throw new Error('Could not resolve org_id from API key');
-    cachedOrgId = self.org_id;
-    return cachedOrgId;
+// Resolve the configured DEVIN_USER_EMAIL to a Devin user_id so sessions can be
+// attributed to that user via `create_as_user_id`. Cached after first lookup.
+async function getUserId() {
+    if (cachedUserId) return cachedUserId;
+    const apiPath = `/v3beta1/organizations/${encodeURIComponent(ORG_ID)}/members/users?email=${encodeURIComponent(USER_EMAIL)}`;
+    const r = await devinRequest('GET', apiPath);
+    if (r.status !== 200) throw new Error(`Could not look up user for ${USER_EMAIL} (${r.status})`);
+    const data = safeParse(r.body);
+    const items = (data && Array.isArray(data.items)) ? data.items : [];
+    const match = items.find(u => u.email && u.email.toLowerCase() === USER_EMAIL.toLowerCase()) || items[0];
+    if (!match || !match.user_id) throw new Error(`No Devin user found for email ${USER_EMAIL}`);
+    cachedUserId = match.user_id;
+    return cachedUserId;
 }
 
 function sendJson(res, status, obj) {
@@ -115,22 +160,29 @@ function serveStatic(req, res) {
 }
 
 async function handleApi(req, res, url) {
-    if (!API_KEY) {
-        return sendJson(res, 503, { error: 'DEVIN_API_KEY is not configured on the server.' });
+    // Public config probe: tells the frontend whether Devin controls should
+    // be shown at all. Never leaks the org/email/key — only an enabled flag.
+    if (req.method === 'GET' && url === '/api/devin/config') {
+        return sendJson(res, 200, { enabled: devinEnabled() });
+    }
+
+    if (!devinEnabled()) {
+        return sendJson(res, 503, {
+            error: 'Devin is not configured. Set DEVIN_API_KEY, DEVIN_ORG_ID and DEVIN_USER_EMAIL to enable sessions.'
+        });
     }
     try {
-        const orgId = await getOrgId();
-
         // Create a session.
         if (req.method === 'POST' && url === '/api/devin/sessions') {
             const payload = await readJsonBody(req);
             if (!payload || !payload.prompt || !String(payload.prompt).trim()) {
                 return sendJson(res, 400, { error: 'prompt is required' });
             }
-            const createBody = { prompt: String(payload.prompt) };
+            const userId = await getUserId();
+            const createBody = { prompt: String(payload.prompt), create_as_user_id: userId };
             if (payload.title) createBody.title = String(payload.title);
-            createBody.tags = ['kanban-todolist'];
-            const r = await devinRequest('POST', `/v3/organizations/${orgId}/sessions`, createBody);
+            createBody.tags = ['daily-task-tracker'];
+            const r = await devinRequest('POST', `/v3/organizations/${ORG_ID}/sessions`, createBody);
             const parsed = safeParse(r.body);
             if (r.status < 200 || r.status >= 300) {
                 return sendJson(res, r.status, { error: (parsed && parsed.detail) || 'Devin API error', detail: parsed });
@@ -142,7 +194,7 @@ async function handleApi(req, res, url) {
         const m = url.match(/^\/api\/devin\/sessions\/([^/]+)$/);
         if (req.method === 'GET' && m) {
             const sid = decodeURIComponent(m[1]);
-            const r = await devinRequest('GET', `/v3/organizations/${orgId}/sessions/${encodeURIComponent(sid)}`);
+            const r = await devinRequest('GET', `/v3/organizations/${ORG_ID}/sessions/${encodeURIComponent(sid)}`);
             const parsed = safeParse(r.body);
             if (r.status < 200 || r.status >= 300) {
                 return sendJson(res, r.status, { error: (parsed && parsed.detail) || 'Devin API error' });
@@ -172,8 +224,15 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`kanban-todolist running at http://localhost:${PORT}`);
-    if (!API_KEY) {
-        console.warn('WARNING: DEVIN_API_KEY not set — /api/devin/* will return 503 and the Devin features will not work.');
+    console.log(`Daily Task Tracker running at http://localhost:${PORT}`);
+    if (devinEnabled()) {
+        console.log(`Devin sessions enabled — org ${ORG_ID}, attributed to ${USER_EMAIL}.`);
+    } else {
+        const missing = [
+            !API_KEY && 'DEVIN_API_KEY',
+            !ORG_ID && 'DEVIN_ORG_ID',
+            !USER_EMAIL && 'DEVIN_USER_EMAIL'
+        ].filter(Boolean).join(', ');
+        console.warn(`WARNING: Devin disabled (missing: ${missing}) — the "Run with Devin" UI will be hidden and /api/devin/* returns 503.`);
     }
 });

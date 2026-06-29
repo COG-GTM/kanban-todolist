@@ -63,16 +63,14 @@
             const oldColumn = task.column;
             if (oldColumn === targetColumn) return;
 
-            // RULE 1: Tasks must flow chronologically; To Do directly to Done is unauthorized
+            // RULE 1: Tasks must flow chronologically; To Do directly to Done is unauthorized.
+            // Moving from In Progress to Done is allowed and marks the task complete.
             if (targetColumn === 'done') {
                 if (oldColumn === 'todo') {
                     showToast('Tasks must go through "In Progress" before entering "Done"!', 'warning');
                     return;
                 }
-                if (!task.completed) {
-                    showToast('Task must be checked (completed) in Progress to move to Done!', 'warning');
-                    return;
-                }
+                task.completed = true;
             }
 
             // RULE 2: Tasks residing inside the initial To Do column cannot be marked completed
@@ -91,76 +89,48 @@
             showToast(`Task moved to "${targetColumn.toUpperCase()}" list.`, 'info');
         }
 
-        // Toggles checklist completion state triggers (Only valid within In Progress)
-        function toggleTaskComplete(taskId) {
-            const task = state.tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            if (task.column === 'todo') {
-                showToast('You cannot complete tasks in the To Do column.', 'warning');
-                return;
-            }
-
-            if (task.column === 'progress') {
-                task.completed = !task.completed;
-                if (task.completed) {
-                    task.column = 'done'; // Automatically transition onward to finished column
-                    showToast('Task completed! Moved to Done.', 'success');
-                }
-                saveToStorage();
-                render();
-            }
-        }
-
         // ==========================================
-        // EXTENDED DETAILED VIEW MODAL BINDINGS
-        // ==========================================
-        function openViewModal(taskId) {
-            const task = state.tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            document.getElementById('viewTaskTitleText').textContent = task.title;
-            
-            const badge = document.getElementById('viewTaskPriorityBadge');
-            badge.textContent = task.priority;
-            badge.className = `badge-priority ${task.priority}`;
-            
-            document.getElementById('viewTaskDescText').textContent = task.desc || 'No description provided.';
-            document.getElementById('viewTaskCreated').textContent = formatFullTime(task.createdAt);
-            document.getElementById('viewTaskEdited').textContent = task.editedAt ? formatFullTime(task.editedAt) : 'Not edited yet';
-
-            openModal('viewModal');
-        }
-
-        // ==========================================
-        // EDIT ACTION DIALOG TARGET CONTROL HANDLERS
+        // COMBINED TASK DETAILS / EDIT MODAL BINDINGS
+        // A single modal both displays task metadata and allows editing. For
+        // completed (Done) tasks the inputs are read-only and Save is hidden.
         // ==========================================
         let editingTaskId = null;
 
-        function openEditModal(taskId) {
+        function openTaskModal(taskId) {
             const task = state.tasks.find(t => t.id === taskId);
             if (!task) return;
 
-            if (task.column === 'done') {
-                showToast('You cannot edit completed tasks.', 'warning');
-                return;
-            }
-
             editingTaskId = taskId;
-            
-            const titleInput = document.getElementById('editTitleInput');
-            const descInput = document.getElementById('editDescInput');
-            const priorityInput = document.getElementById('editPriorityInput');
+            const readOnly = task.column === 'done';
+
+            const titleInput = document.getElementById('taskTitleInput');
+            const descInput = document.getElementById('taskDescInput');
+            const priorityInput = document.getElementById('taskPriorityInput');
 
             titleInput.value = task.title;
             descInput.value = task.desc || '';
             priorityInput.value = task.priority;
 
-            document.getElementById('editTitleCounter').textContent = `${40 - task.title.length} left`;
-            document.getElementById('editDescCounter').textContent = `${150 - (task.desc ? task.desc.length : 0)} left`;
+            titleInput.disabled = readOnly;
+            descInput.disabled = readOnly;
+            priorityInput.disabled = readOnly;
 
-            openModal('editModal');
+            document.getElementById('taskTitleCounter').textContent = `${40 - task.title.length} left`;
+            document.getElementById('taskDescCounter').textContent = `${150 - (task.desc ? task.desc.length : 0)} left`;
+
+            document.getElementById('taskCreated').textContent = formatFullTime(task.createdAt);
+            document.getElementById('taskEdited').textContent = task.editedAt ? formatFullTime(task.editedAt) : 'Not edited yet';
+
+            document.getElementById('taskModalTitle').textContent = readOnly ? 'Task Details' : 'Edit Task';
+            document.getElementById('saveEditBtn').style.display = readOnly ? 'none' : '';
+
+            openModal('taskModal');
         }
+
+        // Backwards-compatible aliases — both the "view" and "edit" card actions
+        // and context-menu entries now open the same combined modal.
+        const openViewModal = openTaskModal;
+        const openEditModal = openTaskModal;
 
         function saveEditedTask() {
             if (!editingTaskId) return;
@@ -168,9 +138,9 @@
             const task = state.tasks.find(t => t.id === editingTaskId);
             if (!task) return;
 
-            const titleInput = document.getElementById('editTitleInput');
-            const descInput = document.getElementById('editDescInput');
-            const priorityInput = document.getElementById('editPriorityInput');
+            const titleInput = document.getElementById('taskTitleInput');
+            const descInput = document.getElementById('taskDescInput');
+            const priorityInput = document.getElementById('taskPriorityInput');
 
             const title = titleInput.value.trim();
             const desc = descInput.value.trim();
@@ -195,7 +165,7 @@
             task.editedAt = Date.now(); // Log edit operation time for validation views
 
             saveToStorage();
-            closeModal('editModal');
+            closeModal('taskModal');
             render();
             showToast('Task updated successfully.', 'success');
             editingTaskId = null;

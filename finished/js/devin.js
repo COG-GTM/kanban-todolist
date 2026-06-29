@@ -9,9 +9,34 @@
 
         let devinKickoffTaskId = null; // task currently shown in the kickoff modal
         let devinPollTimer = null;
+        // Whether the backend is configured to create Devin sessions (org + user
+        // email + key). Until confirmed enabled, the "Run with Devin" UI stays hidden.
+        let devinEnabled = false;
+
+        // Ask the backend whether Devin sessions are configured. When enabled,
+        // re-render so the "Run with Devin" controls appear. Safe to call when
+        // opened via file:// — the failed fetch just leaves the feature hidden.
+        async function refreshDevinConfig() {
+            try {
+                const res = await fetch(`${DEVIN_API_BASE}/config`);
+                if (!res.ok) return;
+                const data = await res.json();
+                const next = Boolean(data && data.enabled);
+                if (next !== devinEnabled) {
+                    devinEnabled = next;
+                    render();
+                }
+            } catch (e) {
+                // No backend / not configured — leave Devin features hidden.
+            }
+        }
 
         // Open the "Run with Devin" modal (To Do tasks only).
         function openDevinModal(taskId) {
+            if (!devinEnabled) {
+                showToast('Devin is not configured on the server.', 'warning');
+                return;
+            }
             const task = state.tasks.find(t => t.id === taskId);
             if (!task) return;
             if (task.column !== 'todo') {
@@ -111,18 +136,29 @@
             const detail = task.devinStatusDetail;
             const status = task.devinStatus || 'running';
             if (detail === 'finished' || status === 'exit') return 'finished';
-            if (detail === 'waiting_for_user') return 'waiting';
+            if (detail === 'waiting_for_user') return 'complete';
             if (detail === 'blocked') return 'blocked';
             if (status === 'error') return 'error';
             if (status === 'suspended') return 'suspended';
-            return status;
+            // Any other (non-terminal) state means Devin is actively working.
+            return 'in Devin';
+        }
+
+        // Whether Devin is actively working on this task (running, not yet in a
+        // terminal/idle state). Drives the loading animation on the status pill.
+        function isDevinWorking(task) {
+            const label = devinStatusLabel(task);
+            return !['finished', 'complete', 'error', 'suspended', 'waiting', 'blocked'].includes(label);
         }
 
         // A session counts as complete once it reaches a terminal status. Per the
         // Devin API, terminal statuses are "exit" (completed), "error" and
         // "suspended"; "finished" as a status_detail also indicates the agent is done.
+        // We also treat "waiting_for_user" as complete: once Devin is waiting on
+        // input we consider the task done and move it to Done.
         function isDevinComplete(status, detail) {
-            return status === 'exit' || status === 'error' || status === 'suspended' || detail === 'finished';
+            return status === 'exit' || status === 'error' || status === 'suspended'
+                || detail === 'finished' || detail === 'waiting_for_user';
         }
 
         // GLOBAL poll across every task that has an active Devin session.

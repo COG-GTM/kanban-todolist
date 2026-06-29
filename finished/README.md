@@ -1,6 +1,6 @@
-# To-Do List
+# Daily Task Tracker
 
-A **minimalist**, **responsive**, and **feature-rich** To-Do List web application built with **HTML**, **CSS**, and **Vanilla JavaScript**.
+A **minimalist**, **responsive**, and **feature-rich** Daily Task Tracker web application built with **HTML**, **CSS**, and **Vanilla JavaScript**.
 
 ### 🌟 Star this Repository!
 
@@ -30,7 +30,7 @@ If our project adds value to your day or if you’re simply a fan of cool, open-
 - Direct Priority Adjustments: Quick-toggle priority levels (Low, Medium, High) directly from task cards or via custom context menus.
 - Smart Right-Click Context Menu: Fast, desktop-like mouse controls to view, edit, move, or delete tasks.
 - Advanced Sorting and Filtering: Real-time search indexing, priority filters, and chronological sorting utilities.
-- Local Persistence: Instant state preservation using local browser storage (localStorage) under the "todolist" key.
+- Local Persistence: Instant state preservation using local browser storage (localStorage) under the "daily-task-tracker" key.
 - Dynamic Time Tracking: Tracks task creation and last-modified timestamps with relative "time ago" formatting.
 - Run with Devin (optional): Kick off a [Devin](https://devin.ai) session from any To Do card. The task moves to In Progress, a global poll tracks the session, and the task auto-moves to Done when the session reaches a terminal state. The associated session is always one click away via "Open Devin session". Requires running the optional backend server (see below).
 
@@ -68,7 +68,7 @@ Scripts are loaded as classic (non-module) scripts in dependency order, so the c
 ## Screenshot
 
 <p align="center">
-  <img src="todolist.png" alt="screenshot">
+  <img src="daily-task-tracker.png" alt="screenshot">
 </p>
 
 ## Installation
@@ -95,7 +95,7 @@ If you have Git installed, you can clone the repository by following these steps
 4. Navigate into the project directory:
 
     ```bash
-    cd todolist
+    cd daily-task-tracker
     ```
 
 ### 2. Download as ZIP
@@ -125,17 +125,24 @@ The "Run with Devin" button on To Do cards starts a real [Devin](https://devin.a
 
 - [Node.js](https://nodejs.org) >= 18
 - A Devin API key (create one at https://app.devin.ai/settings/api-keys)
+- Your Devin organization ID (`org-...`) and the email of the org member that sessions should be attributed to
+
+Sessions are **only** created when the server is explicitly told which org and user to create them for. If either the org ID or the user email is missing, the "Run with Devin" button is hidden entirely and the API returns `503`.
 
 ### Start the server
 
 ```bash
 cd finished
-DEVIN_API_KEY=your_key_here npm start
+DEVIN_API_KEY=your_key_here \
+DEVIN_ORG_ID=org-your_org_id \
+DEVIN_USER_EMAIL=you@yourcompany.com \
+npm start
 ```
 
 Then open http://localhost:3000. The server serves the static app and exposes:
 
-- `POST /api/devin/sessions` — create a session (`{ prompt, title }`)
+- `GET  /api/devin/config` — whether Devin is configured (`{ enabled }`); the frontend uses this to show/hide the Devin UI
+- `POST /api/devin/sessions` — create a session (`{ prompt, title }`), attributed to `DEVIN_USER_EMAIL` via `create_as_user_id`
 - `GET  /api/devin/sessions/:id` — fetch a session's status
 
 ### How it works

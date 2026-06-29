@@ -11,6 +11,10 @@
                 renderTimestampsOnly();
             }, 30000);
 
+            // Check whether the backend is configured for Devin sessions; if so
+            // the "Run with Devin" controls are revealed via a re-render.
+            refreshDevinConfig();
+
             // Begin global polling for any tasks that already have a Devin session
             // (e.g. restored from a previous visit), and poll once immediately.
             startDevinPolling();
