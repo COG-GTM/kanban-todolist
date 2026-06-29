@@ -18,6 +18,7 @@ If our project adds value to your day or if you’re simply a fan of cool, open-
 ## Table of Contents
 
 - [Features](#features)
+- [Project Structure](#project-structure)
 - [Demo](#demo)
 - [Screenshot](#screenshot)
 - [Installation](#installation)
@@ -37,6 +38,29 @@ If our project adds value to your day or if you’re simply a fan of cool, open-
 - Advanced Sorting and Filtering: Real-time search indexing, priority filters, and chronological sorting utilities.
 - Local Persistence: Instant state preservation using local browser storage (localStorage) under the "todolist" key.
 - Dynamic Time Tracking: Tracks task creation and last-modified timestamps with relative "time ago" formatting.
+
+## Project Structure
+
+The application is plain HTML, CSS, and Vanilla JavaScript with **no build step**. Markup, styles, and logic are split into separate files for readability:
+
+```
+.
+├── index.html          # Page markup; links the stylesheet and scripts
+├── css/
+│   └── styles.css      # All styles (design tokens, layout, components, responsive)
+└── js/
+    ├── state.js        # App state, demo seed data, localStorage load/save
+    ├── utils.js        # Date/time formatting helpers
+    ├── toast.js        # Toast notifications
+    ├── modals.js       # Modal open/close + async confirmation dialog
+    ├── render.js       # Board render engine and task card DOM generation
+    ├── tasks.js        # Add / move / edit / delete / complete task logic
+    ├── menus.js        # Right-click context menu + priority badge dropdown
+    ├── events.js       # Event listener wiring (inputs, filters, drag & drop)
+    └── main.js         # Bootstrap on DOMContentLoaded
+```
+
+Scripts are loaded as classic (non-module) scripts in dependency order, so the app still runs by simply opening `index.html` directly in a browser — no server required.
 
 ## Demo
 
