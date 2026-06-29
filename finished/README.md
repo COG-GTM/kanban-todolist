@@ -1,10 +1,5 @@
 # To-Do List
 
-[![GitHub license](https://img.shields.io/github/license/ramazancetinkaya/todolist.svg)](LICENSE)
-[![GitHub issues](https://img.shields.io/github/issues/ramazancetinkaya/todolist)](https://github.com/ramazancetinkaya/todolist/issues)
-[![GitHub stars](https://img.shields.io/github/stars/ramazancetinkaya/todolist)](https://github.com/ramazancetinkaya/todolist/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/ramazancetinkaya/todolist)](https://github.com/ramazancetinkaya/todolist/network)
-
 A **minimalist**, **responsive**, and **feature-rich** To-Do List web application built with **HTML**, **CSS**, and **Vanilla JavaScript**.
 
 ### 🌟 Star this Repository!
@@ -19,7 +14,6 @@ If our project adds value to your day or if you’re simply a fan of cool, open-
 
 - [Features](#features)
 - [Project Structure](#project-structure)
-- [Demo](#demo)
 - [Screenshot](#screenshot)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -62,18 +56,10 @@ The application is plain HTML, CSS, and Vanilla JavaScript with **no build step*
 
 Scripts are loaded as classic (non-module) scripts in dependency order, so the app still runs by simply opening `index.html` directly in a browser — no server required.
 
-## Demo
-
-Experience the application instantly via GitHub Pages:
-
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Click%20Here-blue?style=for-the-badge)](https://ramazancetinkaya.github.io/todolist/)
-
 ## Screenshot
 
 <p align="center">
-  <a href="https://github.com/ramazancetinkaya/simple-todolist">
-    <img src="todolist.png" alt="screenshot">
-  </a>
+  <img src="todolist.png" alt="screenshot">
 </p>
 
 ## Installation
@@ -94,7 +80,7 @@ If you have Git installed, you can clone the repository by following these steps
 2. Run the following command:
    
     ```bash
-    git clone https://github.com/ramazancetinkaya/todolist.git
+    git clone <repository-url>
     ```
 
 4. Navigate into the project directory:
@@ -141,6 +127,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-Whether you need to report an issue, propose a new feature, require setup and integration guidance, or submit a security disclosure, please reach out directly:
-
-📧 **Contact Email**: `ramazancetinkayasolutions@protonmail.com`
+Whether you need to report an issue, propose a new feature, require setup and integration guidance, or submit a security disclosure, please open an issue on the repository.
