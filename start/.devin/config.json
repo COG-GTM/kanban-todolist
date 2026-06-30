@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Exec(node)",
-      "Exec(npm)",
-      "Exec(node -c)"
-    ]
-  }
-}
