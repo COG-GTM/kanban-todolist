@@ -1,6 +1,6 @@
 ---
-name: phase-7-power-interactions
-description: Workshop Phase 7 implementation guide. Add drag-and-drop between columns, a right-click context menu, a clickable priority-badge dropdown, toast notifications, a header Actions menu for bulk operations (load sample data, clean done, clean all), and mobile column tabs. Introduces js/toast.js and js/menus.js. Use when the request is for drag-and-drop, context menus, toasts, bulk actions, or mobile tabs.
+name: phase-5-power-interactions
+description: Workshop Phase 5 implementation guide. Add drag-and-drop between columns, a right-click context menu, a clickable priority-badge dropdown, toast notifications, a header Actions menu for bulk operations (load sample data, clean done, clean all), and mobile column tabs. Introduces js/toast.js and js/menus.js. Use when the request is for drag-and-drop, context menus, toasts, bulk actions, or mobile tabs.
 triggers:
   - user
   - model
@@ -11,13 +11,13 @@ allowed-tools:
   - glob
 ---
 
-# Phase 7 — Power Interactions
+# Phase 5 — Power Interactions
 
-Add the desktop-grade interaction layer on top of the **phase-4 board**.
+Add the desktop-grade interaction layer on top of the **phase-3 board**.
 
-> **Integration notes (shared with phases 5 & 6):**
+> **Integration notes (shared with phase 4):**
 > - `js/render.js`, `js/events.js`, `index.html` are shared — make **additive**
->   changes (new listeners, new markup), don't rewrite phases 5/6 work.
+>   changes (new listeners, new markup), don't rewrite phase 4's work.
 > - Load order in `index.html`: add `<script src="js/toast.js"></script>` early
 >   (after utils, before render) and `<script src="js/menus.js"></script>` before
 >   `events.js`.
@@ -25,7 +25,7 @@ Add the desktop-grade interaction layer on top of the **phase-4 board**.
 >   (e.g. the `moveTask` rejection, validation errors). Once `showToast` exists,
 >   switch those to `showToast(message, type)`.
 > - **Confirmation:** bulk delete actions should use `requestConfirmation` if it
->   exists (phase 5); otherwise fall back to `window.confirm`.
+>   exists (phase 4); otherwise fall back to `window.confirm`.
 
 ## 1. `js/toast.js` (new) — notifications
 `showToast(message, type='info')`: create a `.toast .toast-${type}` element with a
@@ -121,7 +121,7 @@ counts. In `events.js`, clicking a tab toggles `.active` on the buttons and
 ## 7. `css/styles.css` — append the interaction styles
 Match `../.finished/css/styles.css` sections 6 (mobile tabs), 9 (badge dropdown),
 10 (context menu), 12 (toasts), the header Actions menu + `.btn-bulk-neutral`,
-plus `.task-card.dragging { opacity:0.4; }`, `.board-column.drag-over` (indigo
+plus `.task-card.dragging { opacity:0.4; }`, `.board-column.drag-over` (aqua
 border + tint), and the section-14 mobile media query (`@media (max-width:768px)`)
 that shows `.mobile-board-tabs` and hides non-`active-tab` columns.
 
