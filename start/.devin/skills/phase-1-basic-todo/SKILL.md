@@ -65,7 +65,7 @@ Replace the placeholder file. Requirements:
   <script src="js/main.js"></script>
   ```
 
-> Note: `#taskList` is a phase-1-only container; phase 4 replaces it with the
+> Note: `#taskList` is a phase-1-only container; phase 3 replaces it with the
 > three-column Kanban board. The `#todoTitleInput` and `#addTodoBtn` IDs persist.
 
 ### `js/state.js` — state + persistence (the contract every phase reuses)
@@ -94,7 +94,7 @@ Generate ids like: `'task-' + Date.now() + '-' + Math.floor(Math.random() * 1000
 ### `js/tasks.js` — add & delete
 - `addNewTodo()`: read `#todoTitleInput`, `trim()` it, and **reject
   empty/whitespace-only titles** — just return and leave focus in the input (no
-  task added). (The 3–40 character title rules arrive in phase 3; keep phase 1's
+  task added). (The 3–40 character title rules arrive in phase 2; keep phase 1's
   guard to "non-empty" only.) Otherwise push a task built with the shape above,
   `saveToStorage()`, clear the input, then call `render()`.
 - `deleteTask(taskId)`: `state.tasks = state.tasks.filter(t => t.id !== taskId)`,
@@ -109,7 +109,7 @@ Generate ids like: `'task-' + Date.now() + '-' + Math.floor(Math.random() * 1000
 
 > **Which names matter:** only `#todoTitleInput`, `#addTodoBtn`, and `#taskList`
 > are load-bearing for later phases — use those exactly. The task-row markup and
-> its classes here are throwaway (phase 4 replaces `#taskList` with the Kanban
+> its classes here are throwaway (phase 3 replaces `#taskList` with the Kanban
 > board), so name them however you like. Inline `onclick` handlers that call
 > globals — e.g. `onclick="deleteTask('${task.id}')"` — are the project's
 > established pattern and are used throughout the later phases, so they're fine

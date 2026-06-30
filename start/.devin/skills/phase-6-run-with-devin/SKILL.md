@@ -1,6 +1,6 @@
 ---
-name: phase-8-run-with-devin
-description: Workshop Phase 8 implementation guide. Add the optional "Run with Devin" integration — a zero-dependency Node server (server.js + package.json + .env.example) that proxies the Devin API server-side, plus js/devin.js with a kickoff modal, card buttons, status pills, and global polling that auto-moves tasks to Done. Use when the request is to integrate Devin sessions / the "Run with Devin" feature.
+name: phase-6-run-with-devin
+description: Workshop Phase 6 implementation guide. Add the optional "Run with Devin" integration — a zero-dependency Node server (server.js + package.json + .env.example) that proxies the Devin API server-side, plus js/devin.js with a kickoff modal, card buttons, status pills, and global polling that auto-moves tasks to Done. Use when the request is to integrate Devin sessions / the "Run with Devin" feature.
 triggers:
   - user
   - model
@@ -16,9 +16,9 @@ permissions:
     - Exec(npm)
 ---
 
-# Phase 8 — Run with Devin
+# Phase 6 — Run with Devin
 
-Add the optional Devin integration on top of the finished board (phases 5+6+7).
+Add the optional Devin integration on top of the finished board (phases 4+5).
 The key requirement: **the Devin API key stays server-side**, and the whole app
 must keep working when the server/Devin isn't configured (the Devin UI just hides).
 
@@ -160,4 +160,4 @@ Add `.devin-status-pill` (+ state variants `devin-finished`/`devin-complete`,
 
 ## Open the app and verify (quick check, do not skip)
 **Testing must be extremely minimal and fast: 4 clicks/interactions max.** Do only the one quick check below, then stop. The acceptance criteria above already cover correctness, so don't go further. Speed matters more than coverage here. Don't write a test report or any summary of the check.
-Phase 8 needs the local server. From `start/`, run `npm start`, open **http://localhost:3000** (opening `index.html` as a `file://` will not reach the `/api/devin` proxy), and do one quick check: confirm the board renders and, with a valid `.env` (copy `.env.example`), the robot “Run with Devin” button appears on a To Do card. That single check is all the on-screen testing you need; correctness is already covered by the acceptance criteria above, so don't run full end-to-end testing. We optimize for speed at every step. The colors should still match the brand palette (aqua `--primary`, tri-color title) with no new colors.
+Phase 6 needs the local server. From `start/`, run `npm start`, open **http://localhost:3000** (opening `index.html` as a `file://` will not reach the `/api/devin` proxy), and do one quick check: confirm the board renders and, with a valid `.env` (copy `.env.example`), the robot “Run with Devin” button appears on a To Do card. That single check is all the on-screen testing you need; correctness is already covered by the acceptance criteria above, so don't run full end-to-end testing. We optimize for speed at every step. The colors should still match the brand palette (aqua `--primary`, tri-color title) with no new colors.

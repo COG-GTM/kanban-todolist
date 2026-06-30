@@ -1,6 +1,6 @@
 ---
-name: phase-4-kanban-board
-description: Workshop Phase 4 implementation guide. Convert the single list into a three-column Kanban board (To Do / In Progress / Done) with per-column counts, empty states, move-arrow buttons, a To Do→In Progress→Done workflow with completion rules, and seeded demo data. Use when the request is to add a Kanban board, columns, or task status/movement.
+name: phase-3-kanban-board
+description: Workshop Phase 3 implementation guide. Convert the single list into a three-column Kanban board (To Do / In Progress / Done) with per-column counts, empty states, move-arrow buttons, a To Do→In Progress→Done workflow with completion rules, and seeded demo data. Use when the request is to add a Kanban board, columns, or task status/movement.
 triggers:
   - user
   - model
@@ -11,12 +11,11 @@ allowed-tools:
   - glob
 ---
 
-# Phase 4 — Kanban Board & Status
+# Phase 3 — Kanban Board & Status
 
-Replace the single list with a 3-column board and a status workflow. This is the
-**merge point**: it assumes phase 2 (design system) and phase 3 (priority +
-description) are both in place. If one is missing, still build the board; just
-style/skip the missing pieces gracefully.
+Replace the single list with a 3-column board and a status workflow. It assumes
+phase 2 (design system + priority/description) is in place. If it is missing,
+still build the board; just style/skip the missing pieces gracefully.
 
 ## Baseline (assumed state)
 Working app with `#todoTitleInput`, `#addTodoBtn`, design tokens in
@@ -88,12 +87,12 @@ Rewrite `render()` to:
   `fa-check-double` "No completed tasks yet." Use `.empty-column-placeholder`.
 
 `createTaskCardDOM(task)` should produce an `<article class="task-card priority-${task.priority}" data-id="${task.id}">` containing:
-- header: the `.badge-priority` from phase 3,
+- header: the `.badge-priority` from phase 2,
 - `<h4 class="task-title">`,
 - the `.task-desc-excerpt`,
 - a footer `<div class="task-footer">` with a `.card-nav-arrows` group of move
-  buttons (see below). (The edit button + timestamps are added in phase 5; drag &
-  context menu in phase 7 — leave room for them.)
+  buttons (see below). (The edit button + timestamps are added in phase 4; drag &
+  context menu in phase 5 — leave room for them.)
 
 Move arrows by column (`.btn-arrow` calling `moveTask`):
 - **todo:** → Progress.
@@ -124,7 +123,7 @@ function moveTask(taskId, targetColumn) {
     render();
 }
 ```
-(Use `alert()`/`console` for the rejection message for now; phase 7 swaps in toasts.)
+(Use `alert()`/`console` for the rejection message for now; phase 5 swaps in toasts.)
 
 ## 5. `css/styles.css` — board + card chrome (append)
 Match `../.finished/css/styles.css` sections **7 (board grid)** and **8 (task
@@ -150,4 +149,4 @@ card)**. Key pieces:
 **Testing must be extremely minimal and fast: 4 clicks/interactions max.** Do only the one quick check below, then stop. The acceptance criteria above already cover correctness, so don't go further. Speed matters more than coverage here. Don't write a test report or any summary of the check.
 When you finish this phase, **open `start/index.html` and move one task forward a column** (click its move arrow once) and confirm it lands in the next column. That single action is all the on-screen testing you need; correctness is already covered by the acceptance criteria above, so don't run full end-to-end testing. We optimize for speed at every step. While you're there, confirm the colors match the brand palette from the `:root` design tokens (aqua `--primary` with dark text on aqua, and the tri-color title) with no new colors. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
 
-> **Builds on the previous phases.** Before starting, refresh `index.html` to confirm the styled cards (Phase 2) with priority badges and descriptions (Phase 3) are already in place; after finishing, refresh again and verify the board still shows them.
+> **Builds on the previous phases.** Before starting, refresh `index.html` to confirm the styled cards with priority badges and descriptions (Phase 2) are already in place; after finishing, refresh again and verify the board still shows them.

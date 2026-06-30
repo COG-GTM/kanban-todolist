@@ -10,7 +10,7 @@ product, one phase at a time. The phases are a single checklist in `tasks.html`
 > **For ANY feature request or task in this project, your FIRST step is to look
 > for a matching skill in `.devin/skills/`.**
 
-Each workshop phase has a backing skill (`phase-1-*` … `phase-8-*`) that contains
+Each workshop phase has a backing skill (`phase-1-*` … `phase-6-*`) that contains
 the precise, authoritative implementation guide for that feature. When a
 participant gives you a prompt (usually pasted from the `tasks.html` guide):
 
@@ -18,10 +18,10 @@ participant gives you a prompt (usually pasted from the `tasks.html` guide):
    — list `.devin/skills/*/SKILL.md` with your file tools and open the matching
    one. (This always works regardless of your toolset.) If your agent happens to
    have a `skill` tool you may use it instead — `command: "list"`/`"search"` with
-   `path: "."`, or invoke a skill by name like `phase-4-kanban-board` — but don't
+   `path: "."`, or invoke a skill by name like `phase-3-kanban-board` — but don't
    depend on it.
 2. **Match the request to a skill.** Pick the phase skill whose `description`
-   matches what was asked (e.g. "add a Kanban board" → `phase-4-kanban-board`).
+   matches what was asked (e.g. "add a Kanban board" → `phase-3-kanban-board`).
 3. **Follow that skill precisely.** It is the source of truth: file layout,
    exact element IDs / class names / function names, data shapes, and acceptance
    criteria. Honoring those exact names is what keeps later phases working.
@@ -60,13 +60,11 @@ Phases are completed **one at a time, in order**, each building on the one befor
 
 ```
   1  Basic to-do list (foundation)
-  2  Visual design
-  3  Priority + description
-  4  Kanban board & status workflow
-  5  Edit modal
-  6  Search / filter / sort
-  7  Power interactions
-  8  Run with Devin (final)
+  2  Visual design + priority & description
+  3  Kanban board & status workflow
+  4  Edit modal + search / filter / sort
+  5  Power interactions
+  6  Run with Devin (final)
 ```
 
 - Always finish the current phase (and open the app to confirm it works) before
@@ -81,11 +79,11 @@ Follow these whenever you implement a phase or build something with no skill:
 - **Stack:** plain HTML + CSS + vanilla JavaScript. **No build step, no
   frameworks, no bundlers, no npm dependencies.** A `package.json` ships in the
   blank slate, but it has **zero dependencies** — its only `npm start` script runs
-  the zero-dependency Node server that you create in phase 8 (`server.js`). Until
+  the zero-dependency Node server that you create in phase 6 (`server.js`). Until
   then, just open `index.html` directly.
 - **File layout** (built up progressively to mirror the final app):
   ```
-  package.json        # ships in the blank slate; `npm start` runs server.js (phase 8)
+  package.json        # ships in the blank slate; `npm start` runs server.js (phase 6)
   index.html          # markup; links the stylesheet and scripts
   css/styles.css      # all styles
   js/state.js         # app state, demo seed data, localStorage load/save
@@ -121,12 +119,12 @@ Follow these whenever you implement a phase or build something with no skill:
 - **Keep edits additive.** Prefer adding new CSS blocks, new functions, and new
   `index.html` sections over rewriting existing ones — **unless a skill explicitly
   says to replace something**, in which case the skill's instruction wins (e.g.
-  phase 1 replaces the placeholder `index.html`; phase 4 replaces the single list
+  phase 1 replaces the placeholder `index.html`; phase 3 replaces the single list
   with the board).
 
 ## How to run / verify
 
-- **Phases 1–7:** open `index.html` directly in a browser (double-click, or
+- **Phases 1–5:** open `index.html` directly in a browser (double-click, or
   drag it into a tab). Refresh after each change. State persists in
   `localStorage`; clear it with `localStorage.removeItem('daily-task-tracker')` in the
   console if you want a clean slate.
@@ -136,7 +134,7 @@ Follow these whenever you implement a phase or build something with no skill:
   check, not full end-to-end testing — the skill's acceptance criteria already
   cover correctness, so don't go further. **Don't write a test report or any
   summary of the check.** We optimize for speed at every step.
-- **Phase 8 (Devin):** run the Node server with `npm start` from this folder and
+- **Phase 6 (Devin):** run the Node server with `npm start` from this folder and
   open http://localhost:3000. Without the env vars configured, every other
   feature still works — the Devin button just stays hidden.
 
@@ -154,7 +152,7 @@ sees** (copyable prompts, UI text, messages); it's an internal aid for you only.
 **Do NOT run `finished/`'s `package.json`** (no `npm install`/`npm start`/build
 in `finished/`). It's a reference answer key only — running it is never part of
 any workshop phase. The only `package.json` you ever run is this `start/` one,
-and only in Phase 8 (`npm start` → `server.js`).
+and only in Phase 6 (`npm start` → `server.js`).
 
 ## Resolving merge conflicts
 
