@@ -155,3 +155,14 @@ sees** (copyable prompts, UI text, messages); it's an internal aid for you only.
 in `finished/`). It's a reference answer key only — running it is never part of
 any workshop phase. The only `package.json` you ever run is this `start/` one,
 and only in Phase 8 (`npm start` → `server.js`).
+
+## Resolving merge conflicts
+
+If a merge or rebase produces conflicts, **resolve them automatically** instead
+of stopping to ask — keep the participant moving. Use the working reference app
+in `../finished/` as the guide for what the correct, fully-integrated result
+should look like, and reconcile the conflicting code so it matches that intended
+behavior (keeping the exact element IDs, class names, and function names the
+skills specify). After resolving, open the app and do the quick minimal check to
+confirm it still works. Don't expose `finished/` to the participant while doing
+this; it's an internal aid only.
