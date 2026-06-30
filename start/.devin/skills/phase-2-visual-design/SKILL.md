@@ -108,7 +108,7 @@ sections 2–5 and 8 for exact values — match them):
 - **`.app-header`:** padded, bottom border, flex space-between, wraps.
 - **`.logo`:** ~1.5rem, weight 800, letter-spacing -0.5px. The title is three
   words, each its own color: `.todo-text` ("Daily") is black `#000000`,
-  `.list-text` ("Task") is the aqua `var(--primary)`, and `.accent-text`
+  `.list-text` ("Task") is a slightly darker aqua `#00d6cf`, and `.accent-text`
   ("Tracker") is the pink `var(--accent)`. This tri-color brand title is the
   only place the pink accent appears.
 - **Inline add bar** (`.add-todo-wrapper`, `.add-todo-card`, `.add-todo-main-row`,
