@@ -1,0 +1,84 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+body { background: #f8fafc; color: #0f172a; padding: 40px 16px; }
+
+.app-container {
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.app-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.add-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.add-row input {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+}
+
+.add-row input:focus {
+    border-color: #64748b;
+}
+
+.add-row button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background: #0f172a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.add-row button:hover {
+    background: #1e293b;
+}
+
+.task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.task-row .task-title {
+    font-size: 0.95rem;
+}
+
+.task-row .delete-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.task-row .delete-btn:hover {
+    background: #fef2f2;
+}
+
+.empty-message {
+    text-align: center;
+    color: #94a3b8;
+    padding: 32px 0;
+    font-size: 0.95rem;
+}
