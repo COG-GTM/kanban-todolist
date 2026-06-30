@@ -3,35 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Task Tracker — workshop</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-        body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f8fafc; color: #0f172a; padding: 24px; }
-        .placeholder { text-align: center; max-width: 480px; }
-        .logo { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px; }
-        .logo .todo { color: #000000; }
-        .logo .list { color: #00d6cf; }
-        .logo .accent { color: #ff0050; }
-        p { color: #475569; line-height: 1.65; font-size: 0.95rem; }
-        p + p { margin-top: 10px; }
-        code { background: #e0fffe; color: #0a7d78; padding: 2px 6px; border-radius: 6px; font-size: 0.85em; }
-    </style>
+    <title>Daily Task Tracker</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!--
-        This is the BLANK SLATE for the workshop.
-
-        Don't edit this file by hand. Instead, open tasks.html (in the project
-        root, one level up from this folder) and give your agent the prompt for
-        the next phase. As you complete each phase, the agent will
-        replace this screen with the next, more capable version of the app.
-
-        Start here:  tasks.html in the project root  (Phase 1)
-    -->
-    <div class="placeholder">
-        <div class="logo"><span class="todo">Daily</span> <span class="list">Task</span> <span class="accent">Tracker</span></div>
-        <p>This is your blank slate. Open <code>tasks.html</code> (in the project root) and give your agent the <strong>Phase 1 prompt</strong> to build the first version of the app.</p>
-        <p>Each phase you complete replaces this screen with the next version &mdash; refresh your browser after every step to watch your progress.</p>
+    <div class="container">
+        <h1 class="logo"><span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span></h1>
+        <div class="add-row">
+            <input type="text" id="todoTitleInput" placeholder="Add a new todo task..." maxlength="40">
+            <button id="addTodoBtn">Add</button>
+        </div>
+        <div id="taskList"></div>
     </div>
+
+    <script src="js/state.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
