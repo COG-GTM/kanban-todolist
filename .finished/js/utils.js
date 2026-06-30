@@ -19,6 +19,18 @@
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
 
+        // Escape user-provided text before injecting it into innerHTML to
+        // prevent HTML/script injection (XSS).
+        function escapeHtml(value) {
+            if (value === null || value === undefined) return '';
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         function formatFullTime(timestamp) {
             if (!timestamp) return 'Never edited';
             const date = new Date(timestamp);
