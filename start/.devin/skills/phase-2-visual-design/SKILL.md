@@ -128,3 +128,8 @@ the `localStorage` contract.
 - The `:root` design tokens exist and are used (no hard-coded duplicate colors).
 - Add bar and task cards look polished; **add / delete / persistence are unchanged**.
 - Opening `index.html` directly in a browser still works (no build step).
+
+## Open the app and verify (do not skip)
+When you finish this phase, **open `start/index.html` in a browser and refresh the page** to confirm your changes actually render. Don't assume it works from the code alone — look at the running app. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
+
+> **Heads up — parallel workstreams.** This phase can be built at the same time as its sibling phases (Phase 3 — Priority & Description). Each runs as its own workstream/branch and edits overlapping files (`render.js`, `events.js`, `index.html`, `css/styles.css`) **additively**. After *every* parallel workstream merges, **re-open and refresh `index.html` and click through all of the combined features together** to make sure nothing was overwritten or broken before you move on.
