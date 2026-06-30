@@ -2,7 +2,8 @@
 
 This project is a hands-on workshop. You (the agent) help a participant build the
 Daily Task Tracker (a Kanban to-do app) from a blank slate up to a polished
-product, one phase at a time. The phases are a single checklist in `TASKS.md`.
+product, one phase at a time. The phases are a single checklist in `tasks.html`
+(at the repository root, one level up from this `start/` folder).
 
 ## THE GOLDEN RULE: always check for a skill first
 
@@ -11,7 +12,7 @@ product, one phase at a time. The phases are a single checklist in `TASKS.md`.
 
 Each workshop phase has a backing skill (`phase-1-*` … `phase-8-*`) that contains
 the precise, authoritative implementation guide for that feature. When a
-participant gives you a prompt (usually pasted from `TASKS.md`):
+participant gives you a prompt (usually pasted from the `tasks.html` guide):
 
 1. **Discover skills.** Read the `SKILL.md` files under `.devin/skills/` directly
    — list `.devin/skills/*/SKILL.md` with your file tools and open the matching
@@ -105,6 +106,15 @@ Follow these whenever you implement a phase or build something with no skill:
 - **Persistence:** all state lives in `localStorage` under the key `daily-task-tracker`.
 - **Fonts/icons** (from phase 2 on): Google Font "Plus Jakarta Sans" and
   FontAwesome 6.4.0, both via CDN `<link>` tags.
+- **Color scheme (from phase 2 on) — adhere to it strictly.** The brand palette
+  is defined once as the `:root` design tokens in the Phase 2 skill: bright aqua
+  `--primary: #00f2ea` (with dark `--primary-contrast: #00332f` text on aqua
+  fills), hover `--primary-hover: #00cbc4`, and pink `--accent: #ff0050`. The
+  "Daily Task Tracker" title is tri-color: **Daily** black `#000000`, **Task**
+  slightly darker aqua `#00d6cf`, **Tracker** pink `var(--accent)`. The pink
+  accent appears ONLY in the title's last word. Always style with these tokens
+  (`var(--primary)`, etc.); never hard-code duplicate colors, swap the palette,
+  or introduce new accent colors.
 - **Match names exactly.** Element IDs, CSS class names, and function names are
   shared across phases. Use the exact identifiers the skills specify; renaming
   them silently breaks a later phase.
@@ -120,6 +130,12 @@ Follow these whenever you implement a phase or build something with no skill:
   drag it into a tab). Refresh after each change. State persists in
   `localStorage`; clear it with `localStorage.removeItem('daily-task-tracker')` in the
   console if you want a clean slate.
+- **Keep verification fast and extremely minimal.** After a phase, just open the
+  app and do **at most 4 clicks/interactions** to confirm it renders and works
+  (and that the colors still match the palette above). This is a quick sanity
+  check, not full end-to-end testing — the skill's acceptance criteria already
+  cover correctness, so don't go further. **Don't write a test report or any
+  summary of the check.** We optimize for speed at every step.
 - **Phase 8 (Devin):** run the Node server with `npm start` from this folder and
   open http://localhost:3000. Without the env vars configured, every other
   feature still works — the Devin button just stays hidden.
@@ -129,3 +145,13 @@ Follow these whenever you implement a phase or build something with no skill:
 A complete, working version of the final app lives in `../finished/` (outside
 this workshop folder). Treat it as the answer key: consult it if you're stuck,
 but build the app here in `start/` by following the tasks and skills.
+
+**You may read/peek into `../finished/`** to understand what a feature should
+look like or how it behaves. **Never edit anything in `../finished/`** — it is a
+read-only reference. And **never mention `finished/` in anything the participant
+sees** (copyable prompts, UI text, messages); it's an internal aid for you only.
+
+**Do NOT run `finished/`'s `package.json`** (no `npm install`/`npm start`/build
+in `finished/`). It's a reference answer key only — running it is never part of
+any workshop phase. The only `package.json` you ever run is this `start/` one,
+and only in Phase 8 (`npm start` → `server.js`).
