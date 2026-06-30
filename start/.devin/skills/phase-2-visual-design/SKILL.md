@@ -72,15 +72,18 @@ variables are referenced by every later phase:
     --bg-main: #f8fafc;
     --bg-card: #ffffff;
     --border-color: #e2e8f0;
-    --border-focus: #4f46e5;
+    --border-focus: #00c4bc;
     /* Typography (slate scale) */
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
-    /* Indigo brand */
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
-    --primary-light: #eeebff;
+    /* Brand: cyan base, red secondary accent */
+    --primary: #00c4bc;
+    --primary-hover: #00a89f;
+    --primary-light: #e0faf8;
+    --primary-contrast: #00332f; /* dark text for use on the light cyan primary */
+    --accent: #ff0050;
+    --accent-hover: #cc0040;
     /* Priority colors (used by phase 3+) */
     --priority-low-bg: #f0fdf4;   --priority-low-text: #16a34a;   --priority-low-border: #10b981;
     --priority-medium-bg: #fffbeb; --priority-medium-text: #d97706; --priority-medium-border: #f59e0b;
@@ -104,11 +107,13 @@ sections 2–5 and 8 for exact values — match them):
   `border-radius:16px`, `box-shadow: var(--shadow-lg)`, flex column, `overflow:hidden`.
 - **`.app-header`:** padded, bottom border, flex space-between, wraps.
 - **`.logo`:** ~1.5rem, weight 800, letter-spacing -0.5px. `.todo-text` uses
-  `--text-secondary`; `.list-text` uses `--primary`.
+  `--text-secondary`; `.list-text` uses a readable dark cyan (e.g. `#0a7d78`),
+  since the light `--primary` cyan is too low-contrast for text on white.
 - **Inline add bar** (`.add-todo-wrapper`, `.add-todo-card`, `.add-todo-main-row`,
   `.title-input-field`, `.row-right-group`, `.btn-add-submit`): a white rounded
-  card on a slate strip; borderless title input that flexes to fill; an indigo
-  `.btn-add-submit` (white text, `var(--primary)`, hover `--primary-hover`).
+  card on a slate strip; borderless title input that flexes to fill; a cyan
+  `.btn-add-submit` (`var(--primary)` background with **dark** `var(--primary-contrast)`
+  text for legibility, hover `--primary-hover`).
   Add `:focus-within` glow on `.add-todo-card`.
 - **Task cards:** style each list item as a `.task-card` — white, 1px border,
   `border-radius:10px`, `padding:12px`, `--shadow-sm`, hover raises to
