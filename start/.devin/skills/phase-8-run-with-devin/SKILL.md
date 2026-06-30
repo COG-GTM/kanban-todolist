@@ -158,9 +158,9 @@ Add `.devin-status-pill` (+ state variants `devin-finished`/`devin-complete`,
 - Starting a session moves the task to In Progress with a pill; completion
   auto-moves it to Done; "Open Devin session" works.
 
-## Open the app and verify (do not skip)
-Phase 8 needs the local server. From `start/`, run `npm start` and open **http://localhost:3000** (opening `index.html` as a `file://` will not reach the `/api/devin` proxy). Verify:
-- With **no** `.env` configured, `/api/devin/config` returns `{ "enabled": false }`, the “Run with Devin” UI stays hidden, and every core board feature still works.
+## Open the app and verify (quick check, do not skip)
+Phase 8 needs the local server. From `start/`, run `npm start` and open **http://localhost:3000** (opening `index.html` as a `file://` will not reach the `/api/devin` proxy). Click around once or twice to confirm:
+- With **no** `.env` configured, `/api/devin/config` returns `{ "enabled": false }`, the “Run with Devin” UI stays hidden, and the board still works.
 - With a valid `.env` (copy `.env.example`), the robot “Run with Devin” button appears on To Do cards and the kickoff modal opens.
 
-This is the final phase — after it, refresh once more and click through the whole app end to end.
+Keep it fast: a quick sanity check, not full end-to-end testing. We optimize for speed at every step. The colors should still match the brand palette (aqua `--primary`, tri-color title) with no new colors.

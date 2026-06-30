@@ -147,5 +147,5 @@ the right). Don't over-style — phase 2 owns the real design system.
 - Opening `index.html` directly in a browser works with no server/build step.
 - The modular file layout and the exact identifiers above are in place.
 
-## Open the app and verify (do not skip)
-When you finish this phase, **open `start/index.html` in a browser and refresh the page** to confirm your changes actually render. Don't assume it works from the code alone — look at the running app. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
+## Open the app and verify (quick check, do not skip)
+When you finish this phase, **open `start/index.html` in a browser and click around once or twice** to confirm your changes render and work. Keep it fast: a quick look at the running app, not full end-to-end testing. We optimize for speed at every step. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.

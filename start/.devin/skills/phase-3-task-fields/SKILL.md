@@ -124,5 +124,5 @@ Also add the expanding description row (collapsed by default, revealed via
 - `priority` and `desc` persist in `localStorage` and survive a refresh.
 - Title min 3 / max 40 and description max 150 are enforced.
 
-## Open the app and verify (do not skip)
-When you finish this phase, **open `start/index.html` in a browser and refresh the page** to confirm your changes actually render. Don't assume it works from the code alone — look at the running app. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
+## Open the app and verify (quick check, do not skip)
+When you finish this phase, **open `start/index.html` in a browser and click around once or twice** to confirm your changes render and work. Keep it fast: a quick look at the running app, not full end-to-end testing. We optimize for speed at every step. Also glance at the colors: the app must use the brand palette from the `:root` design tokens (aqua `--primary` with dark text on aqua, and the tri-color title) and introduce no new colors. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
