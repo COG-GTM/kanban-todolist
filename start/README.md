@@ -9,11 +9,12 @@ following a backing **skill** for each phase.
 
 1. Open `index.html` in your browser. Right now it's just a placeholder — that's
    your **0**.
-2. Open **`TASKS.md`** — it's the whole workshop as a checklist.
+2. Open **`tasks.html`** in your browser — it's the whole workshop as an
+   interactive checklist (or see `TASKS.md` for the markdown version).
 3. Copy the **prompt** for the next unchecked phase and give it to your agent.
 4. The agent reads `AGENTS.md`, finds the matching skill in `.devin/skills/`, and
    builds the feature.
-5. **Refresh `index.html`**, watch your app level up, and tick the box in `TASKS.md`. ✅
+5. **Refresh `index.html`**, watch your app level up, and tick the box in `tasks.html`. ✅
 6. Repeat down the checklist until you reach the finished product.
 
 ## The phases
