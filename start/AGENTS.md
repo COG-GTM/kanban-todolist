@@ -29,6 +29,30 @@ participant gives you a prompt (usually pasted from `TASKS.md`):
 4. **If NO skill matches the request, build it from scratch** following the
    conventions below. Don't block waiting for a skill that doesn't exist.
 
+## Workshop branching — MANDATORY
+
+> **This repo is used in a multi-participant workshop. Every participant works on
+> their own isolated branch. Follow these rules for EVERY session.**
+
+1. **Determine the participant's GitHub username** from the session metadata
+   (it is provided automatically on every message as `git_username`).
+2. **Ensure the participant's base branch `workshop/<git_username>` exists**
+   (e.g. `workshop/jdoe`). If it doesn't exist on the remote yet, create it
+   from `main` and push it:
+   ```bash
+   git fetch origin
+   git checkout -b workshop/<git_username> origin/main
+   git push -u origin workshop/<git_username>
+   ```
+3. **Create your feature branch off the participant's workshop branch**, not
+   off `main`. Use the normal `devin/*` naming convention:
+   ```bash
+   git checkout -b devin/<timestamp>-<feature> origin/workshop/<git_username>
+   ```
+4. **When creating a PR, target `workshop/<git_username>`** — never `main`.
+   The participant reviews and merges the PR into their own workshop branch.
+5. **Never push to `main`**, and never open or merge PRs into `main`.
+
 ## How the workshop is structured
 
 Phases are completed in this order (a few can be done in parallel):
