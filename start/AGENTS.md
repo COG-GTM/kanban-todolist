@@ -2,7 +2,7 @@
 
 This project is a hands-on workshop. You (the agent) help a participant build the
 Daily Task Tracker (a Kanban to-do app) from a blank slate up to a polished
-product, one phase at a time. The phases are a single checklist in `TASKS.md`.
+product, one phase at a time. The phases are a single checklist in `tasks.html`.
 
 ## THE GOLDEN RULE: always check for a skill first
 
@@ -11,7 +11,7 @@ product, one phase at a time. The phases are a single checklist in `TASKS.md`.
 
 Each workshop phase has a backing skill (`phase-1-*` … `phase-8-*`) that contains
 the precise, authoritative implementation guide for that feature. When a
-participant gives you a prompt (usually pasted from `TASKS.md`):
+participant gives you a prompt (usually pasted from the `tasks.html` guide):
 
 1. **Discover skills.** Read the `SKILL.md` files under `.devin/skills/` directly
    — list `.devin/skills/*/SKILL.md` with your file tools and open the matching
