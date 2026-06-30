@@ -413,7 +413,7 @@
         }
         .board-column.drag-over {
             border-color: var(--border-focus);
-            background-color: #f5f3ff;
+            background-color: var(--primary-light);
         }
 
         .column-header {
