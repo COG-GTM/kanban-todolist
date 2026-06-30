@@ -129,3 +129,8 @@ Follow these whenever you implement a phase or build something with no skill:
 A complete, working version of the final app lives in `../finished/` (outside
 this workshop folder). Treat it as the answer key: consult it if you're stuck,
 but build the app here in `start/` by following the tasks and skills.
+
+**Do NOT run `finished/`'s `package.json`** (no `npm install`/`npm start`/build
+in `finished/`). It's a reference answer key only — running it is never part of
+any workshop phase. The only `package.json` you ever run is this `start/` one,
+and only in Phase 8 (`npm start` → `server.js`).
