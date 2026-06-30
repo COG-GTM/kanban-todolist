@@ -159,4 +159,5 @@ Add `.devin-status-pill` (+ state variants `devin-finished`/`devin-complete`,
   auto-moves it to Done; "Open Devin session" works.
 
 ## Open the app and verify (quick check, do not skip)
+**Testing must be extremely minimal and fast: 4 clicks/interactions max.** Do only the one quick check below, then stop. The acceptance criteria above already cover correctness, so don't go further. Speed matters more than coverage here.
 Phase 8 needs the local server. From `start/`, run `npm start`, open **http://localhost:3000** (opening `index.html` as a `file://` will not reach the `/api/devin` proxy), and do one quick check: confirm the board renders and, with a valid `.env` (copy `.env.example`), the robot “Run with Devin” button appears on a To Do card. That single check is all the on-screen testing you need; correctness is already covered by the acceptance criteria above, so don't run full end-to-end testing. We optimize for speed at every step. The colors should still match the brand palette (aqua `--primary`, tri-color title) with no new colors.
