@@ -21,10 +21,10 @@ and adjust `index.html` markup/classes so the styles have hooks to attach to.
 Phase 1 is done: a working single-column list with `#todoTitleInput`,
 `#addTodoBtn`, `#taskList`, and the modular `js/` files.
 
-> **Parallel with phase 3.** Phase 3 adds a priority `<select>` + description
-> `<textarea>` to the add bar and badges/descriptions on cards. Style defensively:
-> if those elements already exist, style them too; if not, your layout must still
-> look right with just a title input. Don't delete phase 3's markup if present.
+> **Heads up:** Phase 3 (the next phase) will add a priority `<select>` +
+> description `<textarea>` to the add bar and badges/descriptions on cards. Style
+> defensively so your layout looks right with just a title input now and still
+> holds up once those elements are added in the next phase.
 
 ## 1. `index.html` — add fonts/icons and the app shell
 
@@ -131,5 +131,3 @@ the `localStorage` contract.
 
 ## Open the app and verify (do not skip)
 When you finish this phase, **open `start/index.html` in a browser and refresh the page** to confirm your changes actually render. Don't assume it works from the code alone — look at the running app. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
-
-> **Heads up — parallel workstreams.** This phase can be built at the same time as its sibling phases (Phase 3 — Priority & Description). Each runs as its own workstream/branch and edits overlapping files (`render.js`, `events.js`, `index.html`, `css/styles.css`) **additively**. After *every* parallel workstream merges, **re-open and refresh `index.html` and click through all of the combined features together** to make sure nothing was overwritten or broken before you move on.

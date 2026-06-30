@@ -19,32 +19,30 @@ following a backing **skill** for each phase.
 
 ## The phases
 
-The copy-paste prompts and checkboxes live in [`TASKS.md`](TASKS.md). Here's the
-map — do them roughly in order; a few can be tackled in parallel (great if you're
-working in a group — split them up):
+The copy-paste prompts and checkboxes live in [`TASKS.md`](TASKS.md). Work
+through them **one at a time, in order** — each phase builds on the one before:
 
 ```
-        1                 Basic to-do list
-       / \
-      2   3               Visual design  ·  Priority + description     (parallel)
-       \ /
-        4                 Kanban board & status
-      / | \
-     5  6  7              Edit modal  ·  Search/filter/sort  ·  Power UX (parallel)
-      \ | /
-        8                 Run with Devin
+  1  Basic to-do list
+  2  Visual design
+  3  Priority + description
+  4  Kanban board & status
+  5  Edit modal
+  6  Search / filter / sort
+  7  Power interactions
+  8  Run with Devin
 ```
 
-| # | Phase | Build | Depends on |
-|---|-------|-------|-----------|
-| 1 | Basic To-Do List | Add / list / delete tasks, saved in your browser | — |
-| 2 | Visual Design System | Fonts, colors, the polished card UI | 1 |
-| 3 | Priority & Description | Priority levels + descriptions on tasks | 1 |
-| 4 | Kanban Board & Status | Three columns: To Do / In Progress / Done | 2, 3 |
-| 5 | Edit & Details Modal | Click a card to view/edit; timestamps | 4 |
-| 6 | Search, Filter & Sort | Find and organize tasks | 4 |
-| 7 | Power Interactions | Drag & drop, right-click menu, toasts, bulk actions | 4 |
-| 8 | Run with Devin | Kick off a real Devin session from a card | 5, 6, 7 |
+| # | Phase | Build |
+|---|-------|-------|
+| 1 | Basic To-Do List | Add / list / delete tasks, saved in your browser |
+| 2 | Visual Design System | Fonts, colors, the polished card UI |
+| 3 | Priority & Description | Priority levels + descriptions on tasks |
+| 4 | Kanban Board & Status | Three columns: To Do / In Progress / Done |
+| 5 | Edit & Details Modal | Click a card to view/edit; timestamps |
+| 6 | Search, Filter & Sort | Find and organize tasks |
+| 7 | Power Interactions | Drag & drop, right-click menu, toasts, bulk actions |
+| 8 | Run with Devin | Kick off a real Devin session from a card |
 
 ## Tips
 

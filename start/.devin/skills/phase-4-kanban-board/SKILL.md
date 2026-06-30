@@ -149,4 +149,4 @@ card)**. Key pieces:
 ## Open the app and verify (do not skip)
 When you finish this phase, **open `start/index.html` in a browser and refresh the page** to confirm your changes actually render. Don't assume it works from the code alone — look at the running app. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
 
-> **Merging parallel work.** Phase 4 builds on **both** Phase 2 (visual design) and Phase 3 (priority + description). Before starting, refresh `index.html` to confirm both already landed; after finishing, refresh again and verify the board shows styled cards *with* priority badges and descriptions.
+> **Builds on the previous phases.** Before starting, refresh `index.html` to confirm the styled cards (Phase 2) with priority badges and descriptions (Phase 3) are already in place; after finishing, refresh again and verify the board still shows them.
