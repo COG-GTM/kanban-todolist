@@ -4,16 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Task Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="logo"><span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span></h1>
-        <div class="add-row">
-            <input type="text" id="todoTitleInput" placeholder="Add a new todo task..." maxlength="40">
-            <button id="addTodoBtn">Add</button>
-        </div>
-        <div id="taskList"></div>
+    <div class="app-card" id="appCard">
+        <header class="app-header">
+            <div class="logo"><span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span></div>
+            <div class="header-controls"><!-- search/filter/sort land here in phase 6 --></div>
+        </header>
+
+        <section class="add-todo-wrapper">
+            <div class="add-todo-card" id="addTodoCard">
+                <div class="add-todo-main-row">
+                    <input type="text" id="todoTitleInput" class="title-input-field" placeholder="Add a new todo task..." maxlength="40">
+                    <div class="row-right-group">
+                        <button id="addTodoBtn" class="btn-add-submit"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <main>
+            <div id="taskList"></div>
+        </main>
     </div>
 
     <script src="js/state.js"></script>

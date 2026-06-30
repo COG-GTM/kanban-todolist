@@ -9,10 +9,10 @@ function render() {
 
     state.tasks.forEach(task => {
         const row = document.createElement('div');
-        row.className = 'task-row';
+        row.className = 'task-card';
         row.innerHTML = `
             <span class="task-title">${task.title}</span>
-            <button class="delete-btn" onclick="deleteTask('${task.id}')">&times;</button>
+            <button class="btn-card-action" onclick="deleteTask('${task.id}')"><i class="fas fa-trash-alt"></i></button>
         `;
         taskList.appendChild(row);
     });
