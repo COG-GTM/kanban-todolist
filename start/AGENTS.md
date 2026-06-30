@@ -134,7 +134,8 @@ Follow these whenever you implement a phase or build something with no skill:
   app and do **at most 4 clicks/interactions** to confirm it renders and works
   (and that the colors still match the palette above). This is a quick sanity
   check, not full end-to-end testing — the skill's acceptance criteria already
-  cover correctness, so don't go further. We optimize for speed at every step.
+  cover correctness, so don't go further. **Don't write a test report or any
+  summary of the check.** We optimize for speed at every step.
 - **Phase 8 (Devin):** run the Node server with `npm start` from this folder and
   open http://localhost:3000. Without the env vars configured, every other
   feature still works — the Devin button just stays hidden.

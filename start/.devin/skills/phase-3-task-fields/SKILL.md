@@ -125,5 +125,5 @@ Also add the expanding description row (collapsed by default, revealed via
 - Title min 3 / max 40 and description max 150 are enforced.
 
 ## Open the app and verify (quick check, do not skip)
-**Testing must be extremely minimal and fast: 4 clicks/interactions max.** Do only the one quick check below, then stop. The acceptance criteria above already cover correctness, so don't go further. Speed matters more than coverage here.
+**Testing must be extremely minimal and fast: 4 clicks/interactions max.** Do only the one quick check below, then stop. The acceptance criteria above already cover correctness, so don't go further. Speed matters more than coverage here. Don't write a test report or any summary of the check.
 When you finish this phase, **open `start/index.html` and add one task with a priority set** and confirm its colored badge shows on the card. That single action is all the on-screen testing you need; correctness is already covered by the acceptance criteria above, so don't run full end-to-end testing. We optimize for speed at every step. While you're there, confirm the colors match the brand palette from the `:root` design tokens (aqua `--primary` with dark text on aqua, and the tri-color title) with no new colors. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
