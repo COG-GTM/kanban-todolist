@@ -299,6 +299,7 @@
             var s = loadState();
             current = (typeof s.current === "number" && s.current >= 0 && s.current < PHASES.length) ? s.current : 0;
             slide = (s.slide === 1) ? 1 : 0;
+            s.maxPos = Math.max(s.maxPos || 0, pos()); saveState(s);
             renderStage();
             updateProgress();
         })();
