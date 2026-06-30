@@ -171,4 +171,5 @@ the brand colors above are in place.
   darker aqua / pink) and an aqua **Add** button with dark text.
 
 ## Open the app and verify (quick check, do not skip)
+**Testing must be extremely minimal and fast: 4 clicks/interactions max.** Do only the one quick check below, then stop. The acceptance criteria above already cover correctness, so don't go further. Speed matters more than coverage here. Don't write a test report or any summary of the check.
 When you finish this phase, **open `start/index.html` and add one task** (type a title, click Add) and confirm it appears in the list. That single action is all the on-screen testing you need; the detailed correctness is already covered by the acceptance criteria above, so don't run full end-to-end testing. We optimize for speed at every step. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
