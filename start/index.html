@@ -3,35 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Task Tracker — workshop</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-        body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f8fafc; color: #0f172a; padding: 24px; }
-        .placeholder { text-align: center; max-width: 480px; }
-        .logo { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 16px; }
-        .logo .todo { color: #000000; }
-        .logo .list { color: #00d6cf; }
-        .logo .accent { color: #ff0050; }
-        p { color: #475569; line-height: 1.65; font-size: 0.95rem; }
-        p + p { margin-top: 10px; }
-        code { background: #e0fffe; color: #0a7d78; padding: 2px 6px; border-radius: 6px; font-size: 0.85em; }
-    </style>
+    <title>Daily Task Tracker</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!--
-        This is the BLANK SLATE for the workshop.
 
-        Don't edit this file by hand. Instead, open tasks.html (in the project
-        root, one level up from this folder) and give your agent the prompt for
-        the next phase. As you complete each phase, the agent will
-        replace this screen with the next, more capable version of the app.
+    <!-- Master Application Dashboard -->
+    <div class="app-card" id="appCard">
+        
+        <!-- Header Controls & Branding -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span>
+            </div>
+            
+            <div class="header-controls">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search tasks...">
+                </div>
+                
+                <select id="priorityFilter" class="select-filter">
+                    <option value="all">All Priorities</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
 
-        Start here:  tasks.html in the project root  (Phase 1)
-    -->
-    <div class="placeholder">
-        <div class="logo"><span class="todo">Daily</span> <span class="list">Task</span> <span class="accent">Tracker</span></div>
-        <p>This is your blank slate. Open <code>tasks.html</code> (in the project root) and give your agent the <strong>Phase 1 prompt</strong> to build the first version of the app.</p>
-        <p>Each phase you complete replaces this screen with the next version &mdash; refresh your browser after every step to watch your progress.</p>
+                <select id="sortBySelect" class="select-filter">
+                    <option value="date-desc">Newest First</option>
+                    <option value="date-asc">Oldest First</option>
+                    <option value="priority-desc">Highest Priority</option>
+                    <option value="title-asc">Title (A-Z)</option>
+                </select>
+
+                <div class="header-actions-dropdown">
+                    <button id="headerActionsBtn" class="btn-bulk-neutral" title="Board actions">
+                        <i class="fas fa-ellipsis-h"></i> Actions
+                    </button>
+                    <div class="header-actions-menu hidden" id="headerActionsMenu">
+                        <div class="context-menu-item" id="actLoadDemo"><i class="fas fa-wand-magic-sparkles"></i> Load Sample Data</div>
+                        <div class="context-divider"></div>
+                        <div class="context-menu-item" id="actCleanDone"><i class="fas fa-check-double"></i> Clean Done</div>
+                        <div class="context-menu-item danger" id="actCleanAll"><i class="fas fa-trash-alt"></i> Clean All</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Inline Task Creator Container -->
+        <section class="add-todo-wrapper">
+            <div class="add-todo-card" id="addTodoCard">
+                <!-- Inline Core Inputs Row -->
+                <div class="add-todo-main-row">
+                    <input type="text" id="todoTitleInput" class="title-input-field" placeholder="Add a new todo task..." minlength="3" maxlength="40">
+                    
+                    <div class="row-right-group">
+                        <span id="titleCounter" class="char-counter">40 left</span>
+                        
+                        <div class="priority-select-wrapper">
+                            <label for="todoPriorityInput">Priority:</label>
+                            <select id="todoPriorityInput" class="select-filter" style="padding: 4px 6px;">
+                                <option value="low" selected>Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+
+                        <button id="addTodoBtn" class="btn-add-submit">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Auxiliary Collapsible Meta Description Field -->
+                <div class="add-todo-desc-row">
+                    <textarea id="todoDescInput" class="desc-textarea-field" placeholder="Add description (optional)..." maxlength="150"></textarea>
+                    <div id="descCounter" class="desc-char-counter">150 left</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mobile Navigation Tabs Control Bar -->
+        <nav class="mobile-board-tabs" id="mobileTabs">
+            <button class="mobile-tab-btn active" data-tab="todo">
+                To Do <span class="badge" id="todoTabBadge">0</span>
+            </button>
+            <button class="mobile-tab-btn" data-tab="progress">
+                In Progress <span class="badge" id="progressTabBadge">0</span>
+            </button>
+            <button class="mobile-tab-btn" data-tab="done">
+                Done <span class="badge" id="doneTabBadge">0</span>
+            </button>
+        </nav>
+
+        <!-- Kanban Columns Board Container -->
+        <main class="board-container">
+            
+            <!-- COLUMN 1: TO DO -->
+            <section class="board-column active-tab" id="columnTodo" data-column="todo">
+                <header class="column-header">
+                    <div class="column-title-group">
+                        <span class="column-dot todo"></span>
+                        <h3>To Do</h3>
+                    </div>
+                    <span class="column-count" id="countTodo">0</span>
+                </header>
+                <div class="column-body no-scrollbar" id="bodyTodo"></div>
+            </section>
+
+            <!-- COLUMN 2: IN PROGRESS -->
+            <section class="board-column" id="columnProgress" data-column="progress">
+                <header class="column-header">
+                    <div class="column-title-group">
+                        <span class="column-dot progress"></span>
+                        <h3>In Progress</h3>
+                    </div>
+                    <span class="column-count" id="countProgress">0</span>
+                </header>
+                <div class="column-body no-scrollbar" id="bodyProgress"></div>
+            </section>
+
+            <!-- COLUMN 3: DONE -->
+            <section class="board-column" id="columnDone" data-column="done">
+                <header class="column-header">
+                    <div class="column-title-group">
+                        <span class="column-dot done"></span>
+                        <h3>Done</h3>
+                    </div>
+                    <span class="column-count" id="countDone">0</span>
+                </header>
+                <div class="column-body no-scrollbar" id="bodyDone"></div>
+            </section>
+
+        </main>
     </div>
+
+    <!-- ==========================================================================
+       MODALS, DROPDOWNS & INTERACTIVE OVERLAYS
+       ========================================================================== -->
+
+    <!-- COMBINED TASK DETAILS / EDIT MODAL -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal-container">
+            <header class="modal-header">
+                <h3 id="taskModalTitle">Task Details</h3>
+                <button class="btn-modal-close" onclick="closeModal('taskModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </header>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between;">
+                        <label for="taskTitleInput">Task Title *</label>
+                        <span id="taskTitleCounter" class="char-counter">40 left</span>
+                    </div>
+                    <input type="text" id="taskTitleInput" class="form-input" minlength="3" maxlength="40">
+                </div>
+                <div class="form-group">
+                    <label for="taskPriorityInput">Priority</label>
+                    <select id="taskPriorityInput" class="select-filter" style="width: 100%;">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between;">
+                        <label for="taskDescInput">Description (Optional)</label>
+                        <span id="taskDescCounter" class="char-counter">150 left</span>
+                    </div>
+                    <textarea id="taskDescInput" class="form-textarea" maxlength="150"></textarea>
+                </div>
+                <div class="meta-list">
+                    <div class="meta-item">
+                        <span class="meta-label">Created At:</span>
+                        <span class="meta-value" id="taskCreated"></span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Last Edited:</span>
+                        <span class="meta-value" id="taskEdited"></span>
+                    </div>
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('taskModal')">Close</button>
+                <button class="btn btn-primary" id="saveEditBtn">Save Changes</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- DEVIN SESSION KICKOFF MODAL -->
+    <div class="modal-overlay" id="devinModal">
+        <div class="modal-container">
+            <header class="modal-header">
+                <h3><i class="fas fa-robot"></i> Run with Devin</h3>
+                <button class="btn-modal-close" onclick="closeDevinModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </header>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Task</label>
+                    <p id="devinModalTaskTitle" style="font-weight: 600; font-size: 0.95rem; line-height: 1.4; word-break: break-word;"></p>
+                </div>
+                <div class="form-group">
+                    <label for="devinPromptInput">What should Devin do?</label>
+                    <textarea id="devinPromptInput" class="form-textarea" rows="5" placeholder="Describe the task for the Devin agent in detail..."></textarea>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
+                    A new Devin session is created using the org service key. This task moves to
+                    <strong>In Progress</strong> and is automatically moved to <strong>Done</strong> when the session completes.
+                </p>
+            </div>
+            <footer class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDevinModal()">Cancel</button>
+                <button class="btn btn-primary" id="devinKickoffBtn" onclick="confirmDevinKickoff()"><i class="fas fa-rocket"></i> Start Devin Session</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRMATION ACTION DIALOG -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-container" style="max-width: 380px;">
+            <header class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <h3 id="confirmModalTitle">Are you sure?</h3>
+                <button class="btn-modal-close" id="confirmCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </header>
+            <div class="modal-body" style="padding-top: 10px; padding-bottom: 10px;">
+                <p id="confirmModalMessage" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;"></p>
+            </div>
+            <footer class="modal-footer" style="border-top: none; background: #fff;">
+                <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmYesBtn">Yes, Proceed</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- MOUSE CONTEXT MENU DOM -->
+    <div class="custom-context-menu hidden" id="contextMenu">
+        <div class="context-menu-item" id="ctxView"><i class="fas fa-eye"></i> View Details</div>
+        <div class="context-menu-item" id="ctxEdit"><i class="fas fa-edit"></i> Edit Task</div>
+        <div class="context-divider"></div>
+        <div class="context-menu-item" id="ctxMoveTodo"><i class="fas fa-list"></i> Move to To Do</div>
+        <div class="context-menu-item" id="ctxMoveProgress"><i class="fas fa-spinner"></i> Move to Progress</div>
+        <div class="context-menu-item" id="ctxMoveDone"><i class="fas fa-check-circle"></i> Move to Done</div>
+        <div class="context-divider" id="ctxDevinDivider"></div>
+        <div class="context-menu-item" id="ctxRunDevin"><i class="fas fa-robot"></i> Run with Devin</div>
+        <div class="context-menu-item" id="ctxOpenDevin"><i class="fas fa-arrow-up-right-from-square"></i> Open Devin session</div>
+        <div class="context-divider"></div>
+        <div class="context-menu-item danger" id="ctxDelete"><i class="fas fa-trash-alt"></i> Delete Task</div>
+    </div>
+
+    <!-- DIRECT INLINE ACCESS PRIORITY CHANGE DROPDOWN MENU -->
+    <div class="badge-dropdown-menu hidden" id="badgePriorityMenu">
+        <div class="badge-dropdown-item low" data-priority="low">Low</div>
+        <div class="badge-dropdown-item medium" data-priority="medium">Medium</div>
+        <div class="badge-dropdown-item high" data-priority="high">High</div>
+    </div>
+
+    <!-- TOASTER NOTIFICATION PANEL -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/menus.js"></script>
+    <script src="js/devin.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
