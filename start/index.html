@@ -20,10 +20,23 @@
         <section class="add-todo-wrapper">
             <div class="add-todo-card" id="addTodoCard">
                 <div class="add-todo-main-row">
-                    <input type="text" id="todoTitleInput" class="title-input-field" placeholder="Add a new todo task..." maxlength="40">
+                    <input type="text" id="todoTitleInput" class="title-input-field" placeholder="Add a new todo task..." minlength="3" maxlength="40">
                     <div class="row-right-group">
+                        <span id="titleCounter" class="char-counter">40 left</span>
+                        <div class="priority-select-wrapper">
+                            <label for="todoPriorityInput">Priority:</label>
+                            <select id="todoPriorityInput" class="select-filter" style="padding: 4px 6px;">
+                                <option value="low" selected>Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
                         <button id="addTodoBtn" class="btn-add-submit"><i class="fas fa-plus"></i> Add</button>
                     </div>
+                </div>
+                <div class="add-todo-desc-row">
+                    <textarea id="todoDescInput" class="desc-textarea-field" placeholder="Add description (optional)..." maxlength="150"></textarea>
+                    <div id="descCounter" class="desc-char-counter">150 left</div>
                 </div>
             </div>
         </section>

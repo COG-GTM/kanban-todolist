@@ -248,6 +248,34 @@ main {
 }
 
 /* ==========================================================================
+   PRIORITY & DESCRIPTION (Phase 3)
+   ========================================================================== */
+.task-card.priority-low    { border-left: 4px solid var(--priority-low-border); }
+.task-card.priority-medium { border-left: 4px solid var(--priority-medium-border); }
+.task-card.priority-high   { border-left: 4px solid var(--priority-high-border); }
+
+.badge-priority { font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:6px;
+    text-transform:uppercase; letter-spacing:0.2px; cursor:pointer; }
+.badge-priority.low    { background:var(--priority-low-bg);    color:var(--priority-low-text); }
+.badge-priority.medium { background:var(--priority-medium-bg); color:var(--priority-medium-text); }
+.badge-priority.high   { background:var(--priority-high-bg);   color:var(--priority-high-text); }
+
+.task-desc-excerpt { font-size:0.78rem; color:var(--text-secondary); line-height:1.4; word-break:break-word; }
+.char-counter, .desc-char-counter { font-size:0.75rem; color:var(--text-muted); font-weight:500; }
+
+.add-todo-desc-row { max-height:0; opacity:0; overflow:hidden;
+    transition: max-height 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease; }
+.add-todo-card.expanded .add-todo-desc-row { max-height:80px; opacity:1; border-top:1px solid var(--border-color); }
+.desc-textarea-field { width:100%; border:none; outline:none; resize:none; padding:10px 12px;
+    font-size:0.85rem; background:transparent; color:var(--text-secondary); }
+
+.task-card-content { flex: 1; min-width: 0; }
+.task-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+
+.priority-select-wrapper { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; }
+.priority-select-wrapper label { color: var(--text-secondary); font-weight: 500; }
+
+/* ==========================================================================
    RESPONSIVE ADAPTATIONS
    ========================================================================== */
 @media (max-width: 768px) {
