@@ -38,10 +38,12 @@ participant gives you a prompt (usually pasted from the `tasks.html` guide):
 1. **Determine the participant's GitHub username** from the session metadata
    (it is provided automatically on every message as `git_username`).
    **Edge case:** if `git_username` is missing/empty (not provided in the
-   session metadata), check whether the participant has already given you a
-   username earlier in the conversation and use that. If you still don't have
-   one, **ask the participant for their username** before continuing, and use
-   their answer as `<git_username>` for the rest of the session.
+   session metadata), derive it from the participant's email
+   (`git_author_email`, also in the session metadata) by taking the part
+   **before the `@`** (e.g. `wes.convery@cognition.ai` → `wes.convery`). Only
+   if neither `git_username` nor an email is available should you ask the
+   participant for their username. Use whichever value you resolved as
+   `<git_username>` for the rest of the session.
 2. **Ensure the participant's base branch `workshop/<git_username>` exists**
    (e.g. `workshop/jdoe`). If it doesn't exist on the remote yet, create it
    from `main` and push it:
