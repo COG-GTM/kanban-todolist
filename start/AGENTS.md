@@ -2,7 +2,8 @@
 
 This project is a hands-on workshop. You (the agent) help a participant build the
 Daily Task Tracker (a Kanban to-do app) from a blank slate up to a polished
-product, one phase at a time. The phases are a single checklist in `tasks.html`.
+product, one phase at a time. The phases are a single checklist in `tasks.html`
+(at the repository root, one level up from this `start/` folder).
 
 ## THE GOLDEN RULE: always check for a skill first
 
