@@ -27,8 +27,9 @@ A single-column to-do list with:
 - a list of task rows (title + delete button),
 - persistence to `localStorage` under the key `daily-task-tracker`.
 
-Keep the styling minimal and clean — **phase 2 replaces the CSS entirely**, so
-don't invest in design here.
+Keep the layout simple, but **apply the brand color scheme from the start** (see
+`css/styles.css` below). **Phase 2 replaces the CSS entirely** with the full
+design system, so don't invest in polish beyond getting the brand colors in.
 
 ## Files to create
 
@@ -49,6 +50,9 @@ Replace the placeholder file. Requirements:
 - `<title>Daily Task Tracker</title>`, `<meta charset>` and viewport meta.
 - Link `css/styles.css` in `<head>`.
 - A container with a "Daily Task Tracker" logo/heading, an add-task row, and a list:
+  - Logo/heading: render the three title words in separate spans so each can be
+    colored (these exact class names carry forward into phase 2):
+    `<h1 class="logo"><span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span></h1>`
   - Title input: `<input type="text" id="todoTitleInput" placeholder="Add a new todo task..." maxlength="40">`
   - Add button: `<button id="addTodoBtn">Add</button>`
   - List container: `<div id="taskList"></div>`
@@ -130,15 +134,32 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
-### `css/styles.css` — minimal baseline
-A small, legible baseline only. Suggested starting point:
+### `css/styles.css` — minimal baseline, with the brand colors
+Keep the layout simple, but **apply the brand color scheme now** (phase 2 later
+expands these into the full token set). Suggested starting point:
 ```css
+:root {
+    --primary: #00f2ea;          /* bright aqua, the brand primary */
+    --primary-hover: #00cbc4;
+    --primary-contrast: #00332f; /* dark text for use on aqua fills */
+    --accent: #ff0050;           /* pink, used ONLY in the title's last word */
+}
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
 body { background: #f8fafc; color: #0f172a; padding: 40px 16px; }
+
+/* Tri-color brand title: Daily = black, Task = slightly darker aqua, Tracker = pink */
+.logo .todo-text   { color: #000000; }
+.logo .list-text   { color: #00d6cf; }
+.logo .accent-text { color: var(--accent); }
+
+/* Aqua Add button with dark text for legibility */
+#addTodoBtn { background: var(--primary); color: var(--primary-contrast); border: none; cursor: pointer; }
+#addTodoBtn:hover { background: var(--primary-hover); }
 ```
 Add simple styling for a centered container, the input + button row, and task
 rows (a bordered/rounded row with the title on the left and the delete button on
-the right). Don't over-style — phase 2 owns the real design system.
+the right). Don't over-style; phase 2 owns the full design system. Just make sure
+the brand colors above are in place.
 
 ## Acceptance criteria
 - Adding a task (button or Enter) shows it in the list and clears the input.
@@ -146,6 +167,8 @@ the right). Don't over-style — phase 2 owns the real design system.
 - Reloading the page preserves tasks (stored under `localStorage` key `daily-task-tracker`).
 - Opening `index.html` directly in a browser works with no server/build step.
 - The modular file layout and the exact identifiers above are in place.
+- The brand colors are applied: a tri-color "Daily Task Tracker" title (black /
+  darker aqua / pink) and an aqua **Add** button with dark text.
 
 ## Open the app and verify (quick check, do not skip)
 When you finish this phase, **open `start/index.html` in a browser and click around once or twice** to confirm your changes render and work. Keep it fast: a quick look at the running app, not full end-to-end testing. We optimize for speed at every step. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
