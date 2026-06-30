@@ -41,8 +41,28 @@
             </div>
         </section>
 
-        <main>
-            <div id="taskList"></div>
+        <main class="board-container">
+            <section class="board-column" id="columnTodo" data-column="todo">
+                <header class="column-header">
+                    <div class="column-title-group"><span class="column-dot todo"></span><h3>To Do</h3></div>
+                    <span class="column-count" id="countTodo">0</span>
+                </header>
+                <div class="column-body no-scrollbar" id="bodyTodo"></div>
+            </section>
+            <section class="board-column" id="columnProgress" data-column="progress">
+                <header class="column-header">
+                    <div class="column-title-group"><span class="column-dot progress"></span><h3>In Progress</h3></div>
+                    <span class="column-count" id="countProgress">0</span>
+                </header>
+                <div class="column-body no-scrollbar" id="bodyProgress"></div>
+            </section>
+            <section class="board-column col-done" id="columnDone" data-column="done">
+                <header class="column-header">
+                    <div class="column-title-group"><span class="column-dot done"></span><h3>Done</h3></div>
+                    <span class="column-count" id="countDone">0</span>
+                </header>
+                <div class="column-body no-scrollbar" id="bodyDone"></div>
+            </section>
         </main>
     </div>
 
