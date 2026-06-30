@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Checklist — Daily Task Tracker</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        body { min-height: 100vh; background: #f8fafc; color: #0f172a; padding: 32px 16px; }
+        .container { max-width: 720px; margin: 0 auto; }
+
+        /* Header */
+        .header { text-align: center; margin-bottom: 32px; }
+        .logo { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .logo .todo { color: #475569; }
+        .logo .list { color: #4f46e5; }
+        .subtitle { color: #64748b; font-size: 0.95rem; line-height: 1.6; max-width: 520px; margin: 0 auto; }
+
+        /* Progress bar */
+        .progress-wrap { margin-bottom: 28px; }
+        .progress-label { font-size: 0.85rem; color: #64748b; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #4f46e5; border-radius: 99px; transition: width 0.4s ease; }
+
+        /* Tip box */
+        .tip { background: #eef2ff; border-left: 4px solid #4f46e5; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 28px; font-size: 0.85rem; color: #3730a3; line-height: 1.55; }
+        .tip code { background: #ddd6fe; color: #4338ca; padding: 1px 5px; border-radius: 4px; font-size: 0.82em; }
+
+        /* Phase diagram */
+        .diagram { text-align: center; margin-bottom: 28px; padding: 16px; background: #f1f5f9; border-radius: 10px; }
+        .diagram pre { font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace; font-size: 0.78rem; color: #475569; line-height: 1.6; display: inline-block; text-align: left; }
+
+        /* Phase cards */
+        .phase { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 16px; transition: border-color 0.2s, box-shadow 0.2s; }
+        .phase:hover { border-color: #c7d2fe; box-shadow: 0 2px 8px rgba(79, 70, 229, 0.06); }
+        .phase.done { opacity: 0.55; }
+        .phase.done .phase-title { text-decoration: line-through; }
+
+        .phase-top { display: flex; align-items: flex-start; gap: 14px; }
+        .phase-check { flex-shrink: 0; margin-top: 2px; width: 22px; height: 22px; accent-color: #4f46e5; cursor: pointer; }
+        .phase-body { flex: 1; min-width: 0; }
+        .phase-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 2px; }
+        .phase-meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px; }
+
+        /* Prompt area */
+        .prompt-wrap { position: relative; margin-top: 10px; }
+        .prompt { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 48px 12px 14px; font-size: 0.88rem; color: #334155; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
+        .copy-btn { position: absolute; top: 8px; right: 8px; background: #4f46e5; color: #fff; border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+        .copy-btn:hover { background: #4338ca; }
+        .copy-btn.copied { background: #16a34a; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1e293b; color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; pointer-events: none; z-index: 100; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Reset link */
+        .footer { text-align: center; margin-top: 24px; }
+        .reset-btn { background: none; border: 1px solid #e2e8f0; color: #94a3b8; padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+        .reset-btn:hover { color: #ef4444; border-color: #fca5a5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo"><span class="todo">Daily</span><span class="list"> Task Tracker</span></div>
+            <p class="subtitle">Workshop checklist &mdash; work top to bottom, copy each prompt into Devin, then check it off when done.</p>
+        </div>
+
+        <div class="progress-wrap">
+            <div class="progress-label"><span id="progress-text">0 / 8 phases</span><span id="progress-pct">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        </div>
+
+        <div class="tip">
+            <strong>Reset the board anytime:</strong> open the browser console on <code>index.html</code> and run
+            <code>localStorage.removeItem('daily-task-tracker')</code>, then refresh.
+        </div>
+
+        <div class="diagram">
+            <pre>        1                 Basic to-do list
+       / \
+      2   3               Visual design  ·  Priority + description     (parallel)
+       \ /
+        4                 Kanban board &amp; status
+      / | \
+     5  6  7              Edit modal  ·  Search/filter/sort  ·  Power UX (parallel)
+      \ | /
+        8                 Run with Devin</pre>
+        </div>
+
+        <div id="phases"></div>
+
+        <div class="footer">
+            <button class="reset-btn" onclick="resetAll()">Reset all checkboxes</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        var PHASES = [
+            {
+                id: 1,
+                title: "Phase 1 — Basic To-Do List",
+                meta: "start here",
+                prompt: "Build the first version of my Daily Task Tracker: a simple to-do list where I can add a task, see all my tasks listed, delete any task, and have them saved in the browser so they persist after a refresh."
+            },
+            {
+                id: 2,
+                title: "Phase 2 — Visual Design System",
+                meta: "after 1 · parallel with 3",
+                prompt: "Give my Daily Task Tracker a polished visual redesign — proper font, a clean color palette, a centered app card with a branded \"Daily Task Tracker\" header, and nicely styled inputs and task cards — without changing any functionality."
+            },
+            {
+                id: 3,
+                title: "Phase 3 — Priority & Description",
+                meta: "after 1 · parallel with 2",
+                prompt: "Let me set a priority (Low/Medium/High) and an optional description when adding a task, and show a color-coded priority badge and the description on each task card."
+            },
+            {
+                id: 4,
+                title: "Phase 4 — Kanban Board & Status",
+                meta: "after 2 & 3",
+                prompt: "Turn my list into a three-column Kanban board (To Do, In Progress, Done) where tasks move between columns through a To Do → In Progress → Done workflow."
+            },
+            {
+                id: 5,
+                title: "Phase 5 — Edit & Details Modal",
+                meta: "after 4 · parallel with 6 & 7",
+                prompt: "Add an edit/details modal so I can click a card to view or edit its title, priority, and description, with created and last-edited timestamps and a confirmation prompt before deleting."
+            },
+            {
+                id: 6,
+                title: "Phase 6 — Search, Filter & Sort",
+                meta: "after 4 · parallel with 5 & 7",
+                prompt: "Add header controls to search tasks by text, filter them by priority, and sort them across the board."
+            },
+            {
+                id: 7,
+                title: "Phase 7 — Power Interactions",
+                meta: "after 4 · parallel with 5 & 6",
+                prompt: "Add power-user interactions: drag-and-drop between columns, a right-click context menu, a clickable priority badge, toast notifications, bulk board actions, and mobile column tabs."
+            },
+            {
+                id: 8,
+                title: "Phase 8 — Run with Devin",
+                meta: "after 5, 6 & 7 · final",
+                prompt: "Add an optional \"Run with Devin\" integration that starts a real Devin session from a To Do card via a small zero-dependency Node server, moving the task to In Progress and then Done as the session progresses."
+            }
+        ];
+
+        var STORAGE_KEY = "workshop-checklist";
+
+        function loadState() {
+            try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) { return {}; }
+        }
+        function saveState(state) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function showToast(msg) {
+            var el = document.getElementById("toast");
+            el.textContent = msg;
+            el.classList.add("show");
+            clearTimeout(showToast._t);
+            showToast._t = setTimeout(function () { el.classList.remove("show"); }, 2000);
+        }
+
+        function updateProgress() {
+            var state = loadState();
+            var done = 0;
+            PHASES.forEach(function (p) { if (state[p.id]) done++; });
+            var pct = Math.round((done / PHASES.length) * 100);
+            document.getElementById("progress-text").textContent = done + " / " + PHASES.length + " phases";
+            document.getElementById("progress-pct").textContent = pct + "%";
+            document.getElementById("progress-fill").style.width = pct + "%";
+        }
+
+        function renderPhases() {
+            var state = loadState();
+            var container = document.getElementById("phases");
+            container.innerHTML = "";
+
+            PHASES.forEach(function (p) {
+                var checked = !!state[p.id];
+
+                var card = document.createElement("div");
+                card.className = "phase" + (checked ? " done" : "");
+
+                card.innerHTML =
+                    '<div class="phase-top">' +
+                        '<input type="checkbox" class="phase-check" data-id="' + p.id + '"' + (checked ? ' checked' : '') + '>' +
+                        '<div class="phase-body">' +
+                            '<div class="phase-title">' + p.title + '</div>' +
+                            '<div class="phase-meta">' + p.meta + '</div>' +
+                            '<div class="prompt-wrap">' +
+                                '<div class="prompt">' + escapeHtml(p.prompt) + '</div>' +
+                                '<button class="copy-btn" data-prompt="' + escapeAttr(p.prompt) + '">Copy</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+
+                container.appendChild(card);
+            });
+
+            // Wire checkboxes
+            var checks = container.querySelectorAll(".phase-check");
+            for (var i = 0; i < checks.length; i++) {
+                checks[i].addEventListener("change", function () {
+                    var s = loadState();
+                    var id = this.getAttribute("data-id");
+                    s[id] = this.checked;
+                    saveState(s);
+                    this.closest(".phase").className = "phase" + (this.checked ? " done" : "");
+                    updateProgress();
+                });
+            }
+
+            // Wire copy buttons
+            var btns = container.querySelectorAll(".copy-btn");
+            for (var j = 0; j < btns.length; j++) {
+                btns[j].addEventListener("click", function () {
+                    var btn = this;
+                    var text = btn.getAttribute("data-prompt");
+                    navigator.clipboard.writeText(text).then(function () {
+                        btn.textContent = "Copied!";
+                        btn.classList.add("copied");
+                        showToast("Prompt copied to clipboard");
+                        setTimeout(function () { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 1500);
+                    });
+                });
+            }
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
+        function escapeAttr(s) {
+            return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function resetAll() {
+            localStorage.removeItem(STORAGE_KEY);
+            renderPhases();
+            updateProgress();
+            showToast("All checkboxes reset");
+        }
+
+        renderPhases();
+        updateProgress();
+    </script>
+</body>
+</html>
