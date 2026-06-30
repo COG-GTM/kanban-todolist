@@ -17,8 +17,8 @@ Extend tasks with a **priority** and an optional **description**, surface them i
 the add bar (with counters) and on each task card (badge + description).
 
 ## Baseline (assumed state)
-Phase 1 is done (add/list/delete + `localStorage`). Phase 2 may or may not be
-done yet — this phase is **parallel** with it.
+Phases 1 and 2 are done: a working, styled single-column list saved to
+`localStorage`.
 
 > **Integration notes (shared files):**
 > - `index.html` add bar: you add a priority `<select>`, a description
@@ -126,5 +126,3 @@ Also add the expanding description row (collapsed by default, revealed via
 
 ## Open the app and verify (do not skip)
 When you finish this phase, **open `start/index.html` in a browser and refresh the page** to confirm your changes actually render. Don't assume it works from the code alone — look at the running app. If you changed the shape of saved data, run `localStorage.removeItem('daily-task-tracker')` in the console and refresh to reseed.
-
-> **Heads up — parallel workstreams.** This phase can be built at the same time as its sibling phases (Phase 2 — Visual Design). Each runs as its own workstream/branch and edits overlapping files (`render.js`, `events.js`, `index.html`, `css/styles.css`) **additively**. After *every* parallel workstream merges, **re-open and refresh `index.html` and click through all of the combined features together** to make sure nothing was overwritten or broken before you move on.

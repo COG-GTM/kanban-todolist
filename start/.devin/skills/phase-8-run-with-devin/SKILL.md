@@ -82,6 +82,15 @@ PORT=3000
 ```
 (Do **not** create a real `.env` or commit secrets.)
 
+> **Getting the secrets from the participant.** You need three values to enable
+> the integration: `DEVIN_API_KEY`, `DEVIN_ORG_ID`, and `DEVIN_USER_EMAIL`. Do
+> **not** invent or hardcode them. Ask the participant to provide them (they can
+> get them from **Wes or Sohan**), and prompt them to hand the values over as
+> **secrets** so they're stored securely rather than typed into the chat or code.
+> Put them only in a local, git-ignored `.env` (never commit it). If they don't
+> have the secrets yet, build everything else — the app fully works with the
+> Devin UI hidden — and they can drop the secrets in later.
+
 ## 4. `js/devin.js` (new) — frontend integration (talks only to the local proxy)
 - Constants: `DEVIN_API_BASE = '/api/devin'`, `DEVIN_POLL_INTERVAL_MS = 8000`, a
   module flag `let devinEnabled = false`, `let devinPollTimer = null`,

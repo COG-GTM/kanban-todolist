@@ -55,24 +55,23 @@ participant gives you a prompt (usually pasted from `TASKS.md`):
 
 ## How the workshop is structured
 
-Phases are completed in this order (a few can be done in parallel):
+Phases are completed **one at a time, in order**, each building on the one before:
 
 ```
-        1                 Basic to-do list (foundation)
-       / \
-      2   3               2: Visual design   3: Priority + description   (parallel)
-       \ /
-        4                 Kanban board & status workflow (merges 2 + 3)
-      / | \
-     5  6  7              5: Edit modal   6: Search/filter/sort   7: Power interactions (parallel)
-      \ | /
-        8                 Run with Devin (final)
+  1  Basic to-do list (foundation)
+  2  Visual design
+  3  Priority + description
+  4  Kanban board & status workflow
+  5  Edit modal
+  6  Search / filter / sort
+  7  Power interactions
+  8  Run with Devin (final)
 ```
 
-- A phase that lists "Depends on" must be done after those phases.
-- Phases in a parallel group (`{2,3}` and `{5,6,7}`) can be built in any order
-  or simultaneously; each skill includes **Integration notes** for the files
-  they share (`index.html`, `js/render.js`, `js/events.js`).
+- Always finish the current phase (and open the app to confirm it works) before
+  starting the next one.
+- Later phases reuse the exact element IDs, class names, and function names from
+  earlier phases, so keep edits additive and follow each skill precisely.
 
 ## Project conventions
 
