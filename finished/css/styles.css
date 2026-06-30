@@ -1063,6 +1063,23 @@
             font-weight: 500;
             color: var(--text-secondary);
         }
+        .toast-action {
+            margin-left: auto;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+            text-decoration: none;
+            transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+        }
+        .toast-action:hover {
+            text-decoration: underline;
+            opacity: 0.85;
+        }
 
         /* ==========================================================================
            13. DEDICATED COPYRIGHT FOOTER

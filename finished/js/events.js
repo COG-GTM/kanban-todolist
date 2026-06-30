@@ -110,10 +110,16 @@
                     `Are you sure you want to permanently delete all ${completedCount} completed tasks?`
                 );
                 if (confirmed) {
+                    const snapshot = [...state.tasks];
                     state.tasks = state.tasks.filter(t => !t.completed);
                     saveToStorage();
                     render();
-                    showToast('Completed tasks cleared successfully.', 'success');
+                    showUndoToast(`${completedCount} completed task(s) cleared.`, () => {
+                        state.tasks = snapshot;
+                        saveToStorage();
+                        render();
+                        showToast('Tasks restored.', 'success');
+                    });
                 }
             });
 
@@ -128,10 +134,16 @@
                     'Are you sure you want to completely erase all tasks from all lists?'
                 );
                 if (confirmed) {
+                    const snapshot = [...state.tasks];
                     state.tasks = [];
                     saveToStorage();
                     render();
-                    showToast('All tasks cleared successfully.', 'success');
+                    showUndoToast('All tasks cleared.', () => {
+                        state.tasks = snapshot;
+                        saveToStorage();
+                        render();
+                        showToast('Tasks restored.', 'success');
+                    });
                 }
             });
 

@@ -180,9 +180,15 @@
                 `Are you sure you want to permanently delete "${task.title}"?`
             );
             if (confirmed) {
+                const snapshot = [...state.tasks];
                 state.tasks = state.tasks.filter(t => t.id !== taskId);
                 saveToStorage();
                 render();
-                showToast('Task deleted successfully.', 'success');
+                showUndoToast(`Task "${task.title}" deleted.`, () => {
+                    state.tasks = snapshot;
+                    saveToStorage();
+                    render();
+                    showToast('Task restored.', 'success');
+                });
             }
         }
