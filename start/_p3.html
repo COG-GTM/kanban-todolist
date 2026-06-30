@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Task Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { display: block; padding: 40px 24px; height: auto; overflow: auto; }
+        .app-card { margin: 0 auto; }
+        .p3-list { list-style: none; padding: 0; margin: 22px 0 0; }
+        .p3-item { position: relative; background: var(--bg-card); border: 1px solid var(--border-color);
+            border-left-width: 4px; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px;
+            box-shadow: var(--shadow-sm); }
+        .p3-item .trash { position: absolute; top: 16px; right: 18px; background: none; border: none;
+            color: var(--text-muted); font-size: 0.95rem; cursor: pointer; }
+        .p3-badge { display: inline-block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.5px;
+            padding: 3px 9px; border-radius: 6px; margin-bottom: 10px; }
+        .p3-item h4 { margin: 0 0 6px; font-size: 0.98rem; font-weight: 700; color: var(--text-primary); }
+        .p3-item p { margin: 0; font-size: 0.85rem; color: var(--text-secondary); }
+        .p3-item p.none { font-style: italic; color: var(--text-muted); }
+        .p3-high { border-left-color: var(--priority-high-border); }
+        .p3-high .p3-badge { background: var(--priority-high-bg); color: var(--priority-high-text); }
+        .p3-medium { border-left-color: var(--priority-medium-border); }
+        .p3-medium .p3-badge { background: var(--priority-medium-bg); color: var(--priority-medium-text); }
+        .p3-low { border-left-color: var(--priority-low-border); }
+        .p3-low .p3-badge { background: var(--priority-low-bg); color: var(--priority-low-text); }
+    </style>
+</head>
+<body>
+    <div class="app-card">
+        <header class="app-header">
+            <div class="logo">
+                <span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span>
+            </div>
+        </header>
+
+        <section class="add-todo-wrapper">
+            <div class="add-todo-card">
+                <div class="add-todo-main-row">
+                    <input type="text" class="title-input-field" placeholder="Add a new todo task...">
+                    <div class="row-right-group">
+                        <span class="char-counter">40 left</span>
+                        <div class="priority-select-wrapper">
+                            <label>Priority:</label>
+                            <select class="select-filter" style="padding: 4px 6px;">
+                                <option>Low</option><option>Medium</option><option>High</option>
+                            </select>
+                        </div>
+                        <button class="btn-add-submit"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <ul class="p3-list">
+            <li class="p3-item p3-high"><button class="trash"><i class="fas fa-trash-alt"></i></button>
+                <span class="p3-badge">HIGH</span>
+                <h4>Finish the quarterly report</h4>
+                <p>Compile Q2 numbers and send to the leadership team.</p></li>
+            <li class="p3-item p3-medium"><button class="trash"><i class="fas fa-trash-alt"></i></button>
+                <span class="p3-badge">MEDIUM</span>
+                <h4>Buy groceries for the week</h4>
+                <p>Milk, eggs, vegetables and coffee.</p></li>
+            <li class="p3-item p3-low"><button class="trash"><i class="fas fa-trash-alt"></i></button>
+                <span class="p3-badge">LOW</span>
+                <h4>Call the dentist to reschedule</h4>
+                <p>Move the cleaning appointment to next week.</p></li>
+            <li class="p3-item p3-low"><button class="trash"><i class="fas fa-trash-alt"></i></button>
+                <span class="p3-badge">LOW</span>
+                <h4>Review pull requests</h4>
+                <p class="none">No description provided.</p></li>
+        </ul>
+    </div>
+</body>
+</html>

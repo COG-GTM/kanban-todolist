@@ -41,7 +41,7 @@ Restructure `<body>` into the app shell (keep the existing IDs):
 - Header with logo:
   ```html
   <header class="app-header">
-      <div class="logo"><span class="todo-text">Daily</span><span class="list-text"> Task Tracker</span></div>
+      <div class="logo"><span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span></div>
       <div class="header-controls"><!-- search/filter/sort land here in phase 6 --></div>
   </header>
   ```
@@ -72,16 +72,16 @@ variables are referenced by every later phase:
     --bg-main: #f8fafc;
     --bg-card: #ffffff;
     --border-color: #e2e8f0;
-    --border-focus: #00c4bc;
+    --border-focus: #00f2ea;
     /* Typography (slate scale) */
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
-    /* Brand: cyan base, red secondary accent */
-    --primary: #00c4bc;
-    --primary-hover: #00a89f;
-    --primary-light: #e0faf8;
-    --primary-contrast: #00332f; /* dark text for use on the light cyan primary */
+    /* Brand: aqua base. The pink accent is used ONLY in the app-title's last word. */
+    --primary: #00f2ea;
+    --primary-hover: #00cbc4;
+    --primary-light: #e0fffe;
+    --primary-contrast: #00332f; /* dark text for use on the light aqua primary */
     --accent: #ff0050;
     --accent-hover: #cc0040;
     /* Priority colors (used by phase 3+) */
@@ -106,12 +106,14 @@ sections 2–5 and 8 for exact values — match them):
 - **`.app-card`:** max-width ~1080px, `flex:1`, white background, 1px border,
   `border-radius:16px`, `box-shadow: var(--shadow-lg)`, flex column, `overflow:hidden`.
 - **`.app-header`:** padded, bottom border, flex space-between, wraps.
-- **`.logo`:** ~1.5rem, weight 800, letter-spacing -0.5px. `.todo-text` uses
-  `--text-secondary`; `.list-text` uses a readable dark cyan (e.g. `#0a7d78`),
-  since the light `--primary` cyan is too low-contrast for text on white.
+- **`.logo`:** ~1.5rem, weight 800, letter-spacing -0.5px. The title is three
+  words, each its own color: `.todo-text` ("Daily") is black `#000000`,
+  `.list-text` ("Task") is a slightly darker aqua `#00d6cf`, and `.accent-text`
+  ("Tracker") is the pink `var(--accent)`. This tri-color brand title is the
+  only place the pink accent appears.
 - **Inline add bar** (`.add-todo-wrapper`, `.add-todo-card`, `.add-todo-main-row`,
   `.title-input-field`, `.row-right-group`, `.btn-add-submit`): a white rounded
-  card on a slate strip; borderless title input that flexes to fill; a cyan
+  card on a slate strip; borderless title input that flexes to fill; an aqua
   `.btn-add-submit` (`var(--primary)` background with **dark** `var(--primary-contrast)`
   text for legibility, hover `--primary-hover`).
   Add `:focus-within` glow on `.add-todo-card`.

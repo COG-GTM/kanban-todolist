@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Task Tracker</title>
+    <style>
+        body { font-family: -apple-system, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f8fafc; color: #1e293b; margin: 0; padding: 48px 24px; }
+        .wrap { max-width: 560px; margin: 0 auto; }
+        h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 24px; }
+        h1 .w1 { color: #000000; }
+        h1 .w2 { color: #00f2ea; }
+        h1 .w3 { color: #ff0050; }
+        .add-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .add-row input { flex: 1; padding: 11px 14px; font-size: 0.95rem; border: 1px solid #cbd5e1;
+            border-radius: 8px; outline: none; }
+        .add-row button { background: #00f2ea; color: #00332f; border: none; border-radius: 8px;
+            padding: 0 22px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { display: flex; align-items: center; justify-content: space-between; background: #fff;
+            border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+        li span { font-size: 0.95rem; }
+        li button { background: none; border: none; color: #64748b; font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1><span class="w1">Daily</span> <span class="w2">Task</span> <span class="w3">Tracker</span></h1>
+        <div class="add-row">
+            <input type="text" placeholder="Add a new todo task...">
+            <button>Add</button>
+        </div>
+        <ul>
+            <li><span>Buy groceries for the week</span><button>Delete</button></li>
+            <li><span>Finish the quarterly report</span><button>Delete</button></li>
+            <li><span>Call the dentist to reschedule</span><button>Delete</button></li>
+            <li><span>Review pull requests</span><button>Delete</button></li>
+        </ul>
+    </div>
+</body>
+</html>

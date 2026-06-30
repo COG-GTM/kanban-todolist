@@ -5,15 +5,15 @@
     --bg-main: #f8fafc;
     --bg-card: #ffffff;
     --border-color: #e2e8f0;
-    --border-focus: #00c4bc;
+    --border-focus: #00f2ea;
 
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
 
-    --primary: #00c4bc;
-    --primary-hover: #00a89f;
-    --primary-light: #e0faf8;
+    --primary: #00f2ea;
+    --primary-hover: #00cbc4;
+    --primary-light: #e0fffe;
     --primary-contrast: #00332f;
     --accent: #ff0050;
 
@@ -95,8 +95,9 @@ body {
     letter-spacing: -0.5px;
     user-select: none;
 }
-.logo .todo-text { color: var(--text-secondary); margin-right: 2px; }
-.logo .list-text { color: #0a7d78; margin-left: 1px; }
+.logo .todo-text { color: #000000; margin-right: 2px; }
+.logo .list-text { color: #00d6cf; margin-left: 1px; }
+.logo .accent-text { color: var(--accent); margin-left: 1px; }
 
 .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
@@ -121,7 +122,7 @@ body {
 .search-input:focus {
     border-color: var(--border-focus);
     width: 200px;
-    box-shadow: 0 0 0 3px rgba(0, 196, 188, 0.12);
+    box-shadow: 0 0 0 3px rgba(0, 242, 234, 0.18);
 }
 .search-input::placeholder { color: var(--text-muted); }
 
@@ -144,7 +145,7 @@ body {
 }
 .add-todo-card:focus-within {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 4px rgba(0, 196, 188, 0.12);
+    box-shadow: 0 0 0 4px rgba(0, 242, 234, 0.18);
 }
 .add-todo-main-row {
     display: flex;
@@ -466,7 +467,7 @@ body {
 .form-textarea { height: 80px; resize: none; }
 .form-input:focus, .form-textarea:focus {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(0, 196, 188, 0.12);
+    box-shadow: 0 0 0 3px rgba(0, 242, 234, 0.18);
 }
 .form-input:disabled, .form-textarea:disabled { background-color: #f8fafc; color: var(--text-muted); cursor: not-allowed; }
 
@@ -499,7 +500,7 @@ body {
    ========================================================================== */
 .btn-bulk-neutral {
     background-color: #fff;
-    border: 1px solid #cdeeec;
+    border: 1px solid #b3f7f4;
     color: #6366f1;
     padding: 7px 12px;
     border-radius: 8px;
@@ -511,7 +512,7 @@ body {
     gap: 6px;
     transition: var(--transition-smooth);
 }
-.btn-bulk-neutral:hover { background-color: #eef2ff; border-color: #a5b4fc; }
+.btn-bulk-neutral:hover { background-color: var(--primary-light); border-color: #8fe9e4; }
 
 .header-actions-dropdown { position: relative; display: inline-block; }
 .header-actions-menu {
@@ -532,7 +533,7 @@ body {
 
 /* Drag & drop */
 .task-card.dragging { opacity: 0.4; transform: scale(0.98); }
-.board-column.drag-over { border-color: var(--border-focus); background-color: #e0faf8; }
+.board-column.drag-over { border-color: var(--border-focus); background-color: var(--primary-light); }
 
 /* Context menu */
 .custom-context-menu {
@@ -676,10 +677,10 @@ body {
 /* ==========================================================================
    13. DEVIN INTEGRATION
    ========================================================================== */
-.btn-card-action.btn-devin { color: #ff0050; }
-.btn-card-action.btn-devin:hover { background-color: #ffe6ee; }
-.btn-card-action.btn-devin-open { color: #ff0050; }
-.btn-card-action.btn-devin-open:hover { background-color: #ffe6ee; }
+.btn-card-action.btn-devin { color: #0a7d78; }
+.btn-card-action.btn-devin:hover { background-color: var(--primary-light); }
+.btn-card-action.btn-devin-open { color: #0a7d78; }
+.btn-card-action.btn-devin-open:hover { background-color: var(--primary-light); }
 
 .devin-status-pill {
     font-size: 0.62rem;
@@ -691,8 +692,8 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background-color: #ffe6ee;
-    color: #cc0040;
+    background-color: var(--primary-light);
+    color: #0a7d78;
     white-space: nowrap;
 }
 .devin-status-pill i { font-size: 0.6rem; }
@@ -703,7 +704,7 @@ body {
 .devin-status-pill.devin-waiting,
 .devin-status-pill.devin-blocked { background-color: #fffbeb; color: #b45309; }
 .devin-status-pill.devin-clickable { cursor: pointer; transition: var(--transition-smooth); }
-.devin-status-pill.devin-clickable:hover { filter: brightness(0.96); box-shadow: 0 0 0 2px rgba(255, 0, 80, 0.25); }
+.devin-status-pill.devin-clickable:hover { filter: brightness(0.96); box-shadow: 0 0 0 2px rgba(0, 242, 234, 0.35); }
 .devin-status-pill.devin-working { animation: devin-pulse 1.4s ease-in-out infinite; }
 @keyframes devin-pulse {
     0%, 100% { opacity: 1; }

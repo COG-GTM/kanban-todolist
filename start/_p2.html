@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Task Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { display: block; padding: 40px 24px; height: auto; overflow: auto; }
+        .app-card { margin: 0 auto; }
+        .p2-list { list-style: none; padding: 0; margin: 22px 0 0; }
+        .p2-item { display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 16px 20px; margin-bottom: 12px; box-shadow: var(--shadow-sm); }
+        .p2-item h4 { margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+        .p2-item .btn-card-action { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="app-card">
+        <header class="app-header">
+            <div class="logo">
+                <span class="todo-text">Daily</span> <span class="list-text">Task</span> <span class="accent-text">Tracker</span>
+            </div>
+        </header>
+
+        <section class="add-todo-wrapper">
+            <div class="add-todo-card">
+                <div class="add-todo-main-row">
+                    <input type="text" class="title-input-field" placeholder="Add a new todo task...">
+                    <div class="row-right-group">
+                        <button class="btn-add-submit"><i class="fas fa-plus"></i> Add</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <ul class="p2-list">
+            <li class="p2-item"><h4>Buy groceries for the week</h4><button class="btn-card-action"><i class="fas fa-trash-alt"></i></button></li>
+            <li class="p2-item"><h4>Finish the quarterly report</h4><button class="btn-card-action"><i class="fas fa-trash-alt"></i></button></li>
+            <li class="p2-item"><h4>Call the dentist to reschedule</h4><button class="btn-card-action"><i class="fas fa-trash-alt"></i></button></li>
+            <li class="p2-item"><h4>Review pull requests</h4><button class="btn-card-action"><i class="fas fa-trash-alt"></i></button></li>
+        </ul>
+    </div>
+</body>
+</html>
