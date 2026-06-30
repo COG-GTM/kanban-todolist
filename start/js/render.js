@@ -23,14 +23,19 @@ function createTaskCardDOM(task) {
             '</div>';
     }
 
+    var editIcon = task.column === 'done' ? 'fa-expand-alt' : 'fa-pencil-alt';
+    var editTitle = task.column === 'done' ? 'View Task' : 'Edit Task';
+
     article.innerHTML =
         '<div class="task-header">' +
             '<span class="badge-priority ' + task.priority + '">' + task.priority + '</span>' +
+            '<span class="task-time">' + formatRelativeTime(task.createdAt) + '</span>' +
         '</div>' +
         '<h4 class="task-title">' + task.title + '</h4>' +
         descHtml +
         '<div class="task-footer">' +
             '<div class="card-actions-left">' +
+                '<button class="btn-card-action" onclick="openTaskModal(\'' + task.id + '\')" title="' + editTitle + '"><i class="fas ' + editIcon + '"></i></button>' +
                 '<button class="btn-card-action" onclick="deleteTask(\'' + task.id + '\')" title="Delete task"><i class="fas fa-trash-alt"></i></button>' +
             '</div>' +
             arrowsHtml +
@@ -85,4 +90,13 @@ function render() {
     checkEmptyState(bodyTodo, 'todo');
     checkEmptyState(bodyProgress, 'progress');
     checkEmptyState(bodyDone, 'done');
+}
+
+function renderTimestampsOnly() {
+    state.tasks.forEach(function(task) {
+        var card = document.querySelector('.task-card[data-id="' + task.id + '"]');
+        if (!card) return;
+        var timeEl = card.querySelector('.task-time');
+        if (timeEl) timeEl.textContent = formatRelativeTime(task.createdAt);
+    });
 }
