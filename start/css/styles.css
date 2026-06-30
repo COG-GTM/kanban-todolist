@@ -180,14 +180,86 @@ body {
     background-color: var(--primary-hover);
 }
 
+/* Utility class to hide native scrollbar tracks while retaining scroll capability */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* ==========================================================================
+   7. KANBAN CARD BOARD GRID LAYOUT
+   ========================================================================== */
+.board-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 16px 24px;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.board-column {
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.column-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+    user-select: none;
+}
+.column-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.column-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.column-dot.todo { background-color: var(--text-muted); }
+.column-dot.progress { background-color: #f59e0b; }
+.column-dot.done { background-color: #10b981; }
+
+.column-header h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.column-count {
+    background-color: #e2e8f0;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.column-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 /* ==========================================================================
    8. TASK CARD COMPONENT
    ========================================================================== */
-main {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 24px;
-}
 
 .task-card {
     background-color: var(--bg-card);
@@ -197,9 +269,9 @@ main {
     box-shadow: var(--shadow-sm);
     transition: var(--transition-smooth);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
 }
 .task-card:hover {
     box-shadow: var(--shadow-md);
@@ -242,6 +314,85 @@ main {
     font-size: 0.9rem;
 }
 
+.task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.task-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 8px;
+    margin-top: 4px;
+}
+
+.card-actions-left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.card-nav-arrows {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.btn-arrow {
+    background: #f1f5f9;
+    border: none;
+    outline: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    transition: var(--transition-smooth);
+}
+.btn-arrow:hover {
+    background-color: #e2e8f0;
+    color: var(--text-primary);
+}
+
+/* Done column styling */
+.board-column.col-done .task-card {
+    opacity: 0.85;
+}
+.board-column.col-done .task-title {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+/* Column empty illustrations */
+.empty-column-placeholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    color: var(--text-muted);
+    pointer-events: none;
+    user-select: none;
+}
+.empty-column-placeholder i {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    color: #cbd5e1;
+}
+.empty-column-placeholder p {
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
 /* Utility helper */
 .hidden {
     display: none !important;
@@ -269,8 +420,7 @@ main {
 .desc-textarea-field { width:100%; border:none; outline:none; resize:none; padding:10px 12px;
     font-size:0.85rem; background:transparent; color:var(--text-secondary); }
 
-.task-card-content { flex: 1; min-width: 0; }
-.task-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+
 
 .priority-select-wrapper { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; }
 .priority-select-wrapper label { color: var(--text-secondary); font-weight: 500; }
@@ -320,7 +470,17 @@ main {
         margin-top: 4px;
     }
 
-    main {
+    .board-container {
+        grid-template-columns: 1fr;
         padding: 12px;
+        overflow: hidden;
+    }
+
+    .board-column {
+        display: none;
+        height: 100%;
+    }
+    .board-column.active-tab {
+        display: flex;
     }
 }
