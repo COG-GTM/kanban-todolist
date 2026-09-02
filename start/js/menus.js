@@ -56,6 +56,7 @@ function openBadgePriorityMenu(event, taskId) {
     if (!task) return;
 
     if (task.column === 'done') {
+        hideBadgePriorityMenu();
         showToast('Completed tasks cannot change priority.', 'warning');
         return;
     }
@@ -67,8 +68,11 @@ function openBadgePriorityMenu(event, taskId) {
 
     const rect = event.currentTarget.getBoundingClientRect();
     const maxX = window.innerWidth - menu.offsetWidth - 8;
-    menu.style.left = `${Math.min(rect.left, maxX)}px`;
-    menu.style.top = `${rect.bottom + 6}px`;
+    const maxY = window.innerHeight - menu.offsetHeight - 8;
+    const below = rect.bottom + 6;
+    const above = rect.top - menu.offsetHeight - 6;
+    menu.style.left = `${Math.max(8, Math.min(rect.left, maxX))}px`;
+    menu.style.top = `${below <= maxY ? below : Math.max(8, above)}px`;
 
     menu.querySelectorAll('.badge-dropdown-item').forEach(item => {
         item.onclick = (e) => {
