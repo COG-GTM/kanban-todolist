@@ -888,3 +888,53 @@ body {
     .board-column { display: none; }
     .board-column.active-tab { display: flex; }
 }
+
+/* ==========================================================================
+   13. RUN WITH DEVIN
+   ========================================================================== */
+.devin-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    margin-right: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+.devin-status-pill i { font-size: 0.65rem; }
+.devin-status-pill.devin-finished,
+.devin-status-pill.devin-complete {
+    background-color: var(--priority-low-bg);
+    color: var(--priority-low-text);
+}
+.devin-status-pill.devin-error,
+.devin-status-pill.devin-suspended {
+    background-color: var(--priority-high-bg);
+    color: var(--priority-high-text);
+}
+.devin-status-pill.devin-waiting,
+.devin-status-pill.devin-blocked {
+    background-color: var(--priority-medium-bg);
+    color: var(--priority-medium-text);
+}
+.devin-status-pill.devin-working i { animation: devin-pulse 1.4s ease-in-out infinite; }
+.devin-clickable { cursor: pointer; }
+
+@keyframes devin-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+}
+
+.btn-card-action.btn-devin:hover,
+.btn-card-action.btn-devin-open:hover {
+    color: var(--primary);
+    border-color: var(--border-focus);
+}
+
+#devinPromptInput { resize: vertical; }

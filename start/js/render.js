@@ -116,11 +116,36 @@ function createTaskCardDOM(task) {
         navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move back to In Progress"><i class="fas fa-arrow-left"></i></button>`;
     }
 
+    let devinButton = '';
+    if (devinEnabled) {
+        if (task.devinSessionId) {
+            devinButton = `<button class="btn-card-action btn-devin-open" onclick="openDevinSession('${task.id}')" title="Open Devin session"><i class="fas fa-arrow-up-right-from-square"></i></button>`;
+        } else if (isTodo) {
+            devinButton = `<button class="btn-card-action btn-devin" onclick="openDevinModal('${task.id}')" title="Run with Devin"><i class="fas fa-robot"></i></button>`;
+        }
+    }
+
+    let devinPill = '';
+    if (task.devinSessionId) {
+        const working = isDevinWorking(task);
+        const stateClass = working
+            ? 'devin-working'
+            : (task.devinStatus === 'error' || task.devinStatus === 'suspended'
+                ? 'devin-error'
+                : (task.devinStatusDetail === 'waiting_for_user' ? 'devin-waiting' : 'devin-finished'));
+        const clickAttrs = task.devinSessionUrl
+            ? ` devin-clickable" onclick="openDevinSession('${task.id}')"`
+            : '"';
+        const icon = working ? 'fa-spinner' : 'fa-robot';
+        devinPill = `<span class="devin-status-pill ${stateClass}${clickAttrs}><i class="fas ${icon}"></i> ${escapeHtml(devinStatusLabel(task))}</span>`;
+    }
+
     const editButton = `<button class="btn-card-action" onclick="openTaskModal('${task.id}')" title="${isDone ? 'View Task' : 'Edit Task'}"><i class="fas ${isDone ? 'fa-expand-alt' : 'fa-pencil-alt'}"></i></button>`;
 
     card.innerHTML = `
         <div class="task-header">
             <span class="badge-priority ${task.priority}" onclick="openBadgePriorityMenu(event, '${task.id}')">${task.priority}</span>
+            ${devinPill}
             <span class="task-time">${formatRelativeTime(task.createdAt)}</span>
         </div>
         <h4 class="task-title">${escapeHtml(task.title)}</h4>
@@ -128,6 +153,7 @@ function createTaskCardDOM(task) {
         <div class="task-footer">
             <div class="card-actions-left">
                 ${editButton}
+                ${devinButton}
                 <button class="btn-card-action" onclick="deleteTask('${task.id}')" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
             </div>
             <div class="card-nav-arrows">

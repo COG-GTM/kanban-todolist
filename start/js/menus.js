@@ -21,6 +21,9 @@ function showContextMenu(x, y, taskId) {
     const moveProgress = document.getElementById('ctxMoveProgress');
     const moveDone = document.getElementById('ctxMoveDone');
     const del = document.getElementById('ctxDelete');
+    const runDevin = document.getElementById('ctxRunDevin');
+    const openDevin = document.getElementById('ctxOpenDevin');
+    const devinDivider = document.getElementById('ctxDevinDivider');
 
     const setDisabled = (el, disabled) => el.classList.toggle('disabled', disabled);
 
@@ -41,6 +44,14 @@ function showContextMenu(x, y, taskId) {
     moveProgress.onclick = run(() => moveTask(taskId, 'progress'));
     moveDone.onclick = run(() => moveTask(taskId, 'done'));
     del.onclick = run(() => deleteTask(taskId));
+
+    const canRunDevin = devinEnabled && task.column === 'todo' && !task.devinSessionId;
+    const canOpenDevin = Boolean(task.devinSessionUrl);
+    runDevin.classList.toggle('hidden', !canRunDevin);
+    openDevin.classList.toggle('hidden', !canOpenDevin);
+    devinDivider.classList.toggle('hidden', !canRunDevin && !canOpenDevin);
+    runDevin.onclick = run(() => openDevinModal(taskId));
+    openDevin.onclick = run(() => openDevinSession(taskId));
 
     menu.classList.remove('hidden');
     const maxX = window.innerWidth - menu.offsetWidth - 8;
