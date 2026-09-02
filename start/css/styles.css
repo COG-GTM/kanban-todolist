@@ -211,9 +211,15 @@ body {
     transition: var(--transition-smooth);
     position: relative;
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.task-header {
+    display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
 }
 .task-card:hover {
     box-shadow: var(--shadow-md);
@@ -271,6 +277,99 @@ body {
 }
 
 /* ==========================================================================
-   7. UTILITIES
+   7. PRIORITY & DESCRIPTION
+   ========================================================================== */
+.task-card.priority-low    { border-left: 4px solid var(--priority-low-border); }
+.task-card.priority-medium { border-left: 4px solid var(--priority-medium-border); }
+.task-card.priority-high   { border-left: 4px solid var(--priority-high-border); }
+
+.badge-priority {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    user-select: none;
+    transition: var(--transition-smooth);
+}
+.badge-priority:hover { filter: brightness(0.95); }
+.badge-priority.low    { background: var(--priority-low-bg);    color: var(--priority-low-text); }
+.badge-priority.medium { background: var(--priority-medium-bg); color: var(--priority-medium-text); }
+.badge-priority.high   { background: var(--priority-high-bg);   color: var(--priority-high-text); }
+
+.task-desc-excerpt {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.char-counter, .desc-char-counter {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.desc-char-counter {
+    padding: 0 12px 6px 12px;
+    text-align: right;
+    font-size: 0.7rem;
+}
+
+.priority-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.priority-select-wrapper label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.select-filter {
+    padding: 7px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    outline: none;
+    background-color: #fff;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+.select-filter:focus { border-color: var(--border-focus); }
+
+.add-todo-desc-row {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+    border-top: 0 solid var(--border-color);
+    background-color: #fafafa;
+}
+.add-todo-card.expanded .add-todo-desc-row {
+    max-height: 80px;
+    opacity: 1;
+    border-top: 1px solid var(--border-color);
+}
+
+.desc-textarea-field {
+    width: 100%;
+    height: 55px;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    background: transparent;
+    color: var(--text-secondary);
+}
+.desc-textarea-field::placeholder { color: var(--text-muted); }
+
+/* ==========================================================================
+   8. UTILITIES
    ========================================================================== */
 .hidden { display: none !important; }
