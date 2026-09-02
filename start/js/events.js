@@ -69,6 +69,8 @@ function setupEventListeners() {
 
     headerActionsBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        hideContextMenu();
+        hideBadgePriorityMenu();
         headerActionsMenu.classList.toggle('hidden');
     });
 
