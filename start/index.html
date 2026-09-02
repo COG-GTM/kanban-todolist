@@ -31,6 +31,15 @@
                     <option value="priority-desc">Highest Priority</option>
                     <option value="title-asc">Title (A-Z)</option>
                 </select>
+                <div class="header-actions-dropdown">
+                    <button id="headerActionsBtn" class="btn-bulk-neutral" title="Board actions"><i class="fas fa-ellipsis-h"></i> Actions</button>
+                    <div class="header-actions-menu hidden" id="headerActionsMenu">
+                        <div class="context-menu-item" id="actLoadDemo"><i class="fas fa-wand-magic-sparkles"></i> Load Sample Data</div>
+                        <div class="context-divider"></div>
+                        <div class="context-menu-item" id="actCleanDone"><i class="fas fa-check-double"></i> Clean Done</div>
+                        <div class="context-menu-item danger" id="actCleanAll"><i class="fas fa-trash-alt"></i> Clean All</div>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -58,8 +67,14 @@
             </div>
         </section>
 
+        <nav class="mobile-board-tabs" id="mobileTabs">
+            <button class="mobile-tab-btn active" data-tab="todo">To Do <span class="badge" id="todoTabBadge">0</span></button>
+            <button class="mobile-tab-btn" data-tab="progress">In Progress <span class="badge" id="progressTabBadge">0</span></button>
+            <button class="mobile-tab-btn" data-tab="done">Done <span class="badge" id="doneTabBadge">0</span></button>
+        </nav>
+
         <main class="board-container">
-            <section class="board-column" id="columnTodo" data-column="todo">
+            <section class="board-column active-tab" id="columnTodo" data-column="todo">
                 <header class="column-header">
                     <div class="column-title-group"><span class="column-dot todo"></span><h3>To Do</h3></div>
                     <span class="column-count" id="countTodo">0</span>
@@ -152,11 +167,32 @@
         </div>
     </div>
 
+    <div class="custom-context-menu hidden" id="contextMenu">
+        <div class="context-menu-item" id="ctxView"><i class="fas fa-expand-alt"></i> View Details</div>
+        <div class="context-menu-item" id="ctxEdit"><i class="fas fa-pencil-alt"></i> Edit Task</div>
+        <div class="context-divider"></div>
+        <div class="context-menu-item" id="ctxMoveTodo"><i class="fas fa-list-check"></i> Move to To Do</div>
+        <div class="context-menu-item" id="ctxMoveProgress"><i class="fas fa-spinner"></i> Move to Progress</div>
+        <div class="context-menu-item" id="ctxMoveDone"><i class="fas fa-check-double"></i> Move to Done</div>
+        <div class="context-divider"></div>
+        <div class="context-menu-item danger" id="ctxDelete"><i class="fas fa-trash-alt"></i> Delete Task</div>
+    </div>
+
+    <div class="badge-dropdown-menu hidden" id="badgePriorityMenu">
+        <div class="badge-dropdown-item" data-priority="low"><span class="badge-priority low">low</span></div>
+        <div class="badge-dropdown-item" data-priority="medium"><span class="badge-priority medium">medium</span></div>
+        <div class="badge-dropdown-item" data-priority="high"><span class="badge-priority high">high</span></div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
     <script src="js/state.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/modals.js"></script>
     <script src="js/render.js"></script>
     <script src="js/tasks.js"></script>
+    <script src="js/menus.js"></script>
     <script src="js/events.js"></script>
     <script src="js/main.js"></script>
 </body>

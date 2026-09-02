@@ -1,5 +1,7 @@
 let editingTaskId = null;
 
+const COLUMN_LABELS = { todo: 'To Do', progress: 'In Progress', done: 'Done' };
+
 function addNewTodo() {
     const titleInput = document.getElementById('todoTitleInput');
     const descInput = document.getElementById('todoDescInput');
@@ -10,16 +12,16 @@ function addNewTodo() {
     const priority = priorityInput.value;
 
     if (title.length < 3) {
-        alert('Task title must be at least 3 characters long!');
+        showToast('Task title must be at least 3 characters long!', 'warning');
         titleInput.focus();
         return;
     }
     if (title.length > 40) {
-        alert('Task title cannot exceed 40 characters!');
+        showToast('Task title cannot exceed 40 characters!', 'warning');
         return;
     }
     if (desc.length > 150) {
-        alert('Description cannot exceed 150 characters!');
+        showToast('Description cannot exceed 150 characters!', 'warning');
         return;
     }
 
@@ -49,6 +51,7 @@ function addNewTodo() {
     titleInput.focus();
 
     render();
+    showToast('Task added.', 'success');
 }
 
 function moveTask(taskId, targetColumn) {
@@ -59,7 +62,7 @@ function moveTask(taskId, targetColumn) {
 
     if (targetColumn === 'done') {
         if (oldColumn === 'todo') {
-            alert('Tasks must go through "In Progress" before entering "Done"!');
+            showToast('Tasks must go through "In Progress" before entering "Done"!', 'warning');
             return;
         }
         task.completed = true;
@@ -71,6 +74,7 @@ function moveTask(taskId, targetColumn) {
     task.column = targetColumn;
     saveToStorage();
     render();
+    showToast(`Moved to ${COLUMN_LABELS[targetColumn]}.`, 'success');
 }
 
 function openTaskModal(taskId) {
@@ -115,15 +119,15 @@ function saveEditedTask() {
     const priority = document.getElementById('taskPriorityInput').value;
 
     if (title.length < 3) {
-        alert('Task title must be at least 3 characters long!');
+        showToast('Task title must be at least 3 characters long!', 'warning');
         return;
     }
     if (title.length > 40) {
-        alert('Task title cannot exceed 40 characters!');
+        showToast('Task title cannot exceed 40 characters!', 'warning');
         return;
     }
     if (desc.length > 150) {
-        alert('Description cannot exceed 150 characters!');
+        showToast('Description cannot exceed 150 characters!', 'warning');
         return;
     }
 
@@ -135,6 +139,7 @@ function saveEditedTask() {
     saveToStorage();
     closeModal('taskModal');
     render();
+    showToast('Task updated.', 'success');
 }
 
 async function deleteTask(taskId) {
@@ -147,4 +152,5 @@ async function deleteTask(taskId) {
     state.tasks = state.tasks.filter(t => t.id !== taskId);
     saveToStorage();
     render();
+    showToast('Task deleted.', 'success');
 }
