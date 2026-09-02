@@ -1,52 +1,97 @@
 function render() {
-    const list = document.getElementById('taskList');
-    list.innerHTML = '';
+    const bodyTodo = document.getElementById('bodyTodo');
+    const bodyProgress = document.getElementById('bodyProgress');
+    const bodyDone = document.getElementById('bodyDone');
 
-    if (state.tasks.length === 0) {
-        const empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.innerHTML = '<i class="fas fa-clipboard-list"></i><p>No tasks yet — add your first one above.</p>';
-        list.appendChild(empty);
-        return;
-    }
+    bodyTodo.innerHTML = '';
+    bodyProgress.innerHTML = '';
+    bodyDone.innerHTML = '';
+
+    const counts = { todo: 0, progress: 0, done: 0 };
 
     state.tasks.forEach(task => {
-        const card = document.createElement('div');
-        card.className = `task-card priority-${task.priority}`;
+        counts[task.column]++;
+        const card = createTaskCardDOM(task);
 
-        const header = document.createElement('div');
-        header.className = 'task-header';
-
-        const badge = document.createElement('span');
-        badge.className = `badge-priority ${task.priority}`;
-        badge.textContent = task.priority;
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn-card-action';
-        deleteBtn.title = 'Delete task';
-        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-        deleteBtn.addEventListener('click', () => deleteTask(task.id));
-
-        header.appendChild(badge);
-        header.appendChild(deleteBtn);
-
-        const title = document.createElement('div');
-        title.className = 'task-title';
-        title.textContent = task.title;
-
-        const desc = document.createElement('p');
-        desc.className = 'task-desc-excerpt';
-        if (task.desc) {
-            desc.textContent = task.desc;
-        } else {
-            desc.textContent = 'No description provided.';
-            desc.style.color = 'var(--text-muted)';
-            desc.style.fontStyle = 'italic';
+        if (task.column === 'todo') {
+            bodyTodo.appendChild(card);
+        } else if (task.column === 'progress') {
+            bodyProgress.appendChild(card);
+        } else if (task.column === 'done') {
+            bodyDone.appendChild(card);
         }
-
-        card.appendChild(header);
-        card.appendChild(title);
-        card.appendChild(desc);
-        list.appendChild(card);
     });
+
+    document.getElementById('countTodo').textContent = counts.todo;
+    document.getElementById('countProgress').textContent = counts.progress;
+    document.getElementById('countDone').textContent = counts.done;
+
+    checkEmptyState('todo', bodyTodo, counts.todo);
+    checkEmptyState('progress', bodyProgress, counts.progress);
+    checkEmptyState('done', bodyDone, counts.done);
+}
+
+function checkEmptyState(columnName, element, count) {
+    if (count > 0) return;
+
+    let icon = 'fa-clipboard-list';
+    let msg = 'No tasks listed here.';
+    if (columnName === 'progress') {
+        icon = 'fa-spinner';
+        msg = 'Nothing in progress.';
+    } else if (columnName === 'done') {
+        icon = 'fa-check-double';
+        msg = 'No completed tasks yet.';
+    }
+
+    element.innerHTML = `
+        <div class="empty-column-placeholder">
+            <i class="fas ${icon}"></i>
+            <p>${msg}</p>
+        </div>
+    `;
+}
+
+function createTaskCardDOM(task) {
+    const card = document.createElement('article');
+    card.className = `task-card priority-${task.priority}`;
+    card.setAttribute('data-id', task.id);
+
+    const isTodo = task.column === 'todo';
+    const isProgress = task.column === 'progress';
+    const isDone = task.column === 'done';
+
+    const descHTML = task.desc
+        ? `<p class="task-desc-excerpt">${task.desc}</p>`
+        : `<p class="task-desc-excerpt" style="color:var(--text-muted); font-style:italic;">No description provided.</p>`;
+
+    let navArrowsHTML = '';
+    if (isTodo) {
+        navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move to Progress"><i class="fas fa-arrow-right"></i></button>`;
+    } else if (isProgress) {
+        navArrowsHTML = `
+            <button class="btn-arrow" onclick="moveTask('${task.id}', 'todo')" title="Move back to To Do"><i class="fas fa-arrow-left"></i></button>
+            <button class="btn-arrow" onclick="moveTask('${task.id}', 'done')" title="Move to Done"><i class="fas fa-arrow-right"></i></button>
+        `;
+    } else if (isDone) {
+        navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move back to In Progress"><i class="fas fa-arrow-left"></i></button>`;
+    }
+
+    card.innerHTML = `
+        <div class="task-header">
+            <span class="badge-priority ${task.priority}">${task.priority}</span>
+        </div>
+        <h4 class="task-title">${task.title}</h4>
+        ${descHTML}
+        <div class="task-footer">
+            <div class="card-actions-left">
+                <button class="btn-card-action" onclick="deleteTask('${task.id}')" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
+            </div>
+            <div class="card-nav-arrows">
+                ${navArrowsHTML}
+            </div>
+        </div>
+    `;
+
+    return card;
 }
