@@ -39,9 +39,14 @@ function addNewTodo() {
     titleInput.value = '';
     descInput.value = '';
     priorityInput.value = 'low';
-    document.getElementById('titleCounter').textContent = '40 left';
-    document.getElementById('descCounter').textContent = '150 left';
+    const titleCounter = document.getElementById('titleCounter');
+    const descCounter = document.getElementById('descCounter');
+    titleCounter.textContent = '40 left';
+    titleCounter.style.color = 'var(--text-muted)';
+    descCounter.textContent = '150 left';
+    descCounter.style.color = 'var(--text-muted)';
     document.getElementById('addTodoCard').classList.remove('expanded');
+    titleInput.focus();
 
     render();
 }

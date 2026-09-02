@@ -71,7 +71,7 @@ function createTaskCardDOM(task) {
     const isDone = task.column === 'done';
 
     const descHTML = task.desc
-        ? `<p class="task-desc-excerpt">${task.desc}</p>`
+        ? `<p class="task-desc-excerpt">${escapeHtml(task.desc)}</p>`
         : `<p class="task-desc-excerpt" style="color:var(--text-muted); font-style:italic;">No description provided.</p>`;
 
     let navArrowsHTML = '';
@@ -93,7 +93,7 @@ function createTaskCardDOM(task) {
             <span class="badge-priority ${task.priority}">${task.priority}</span>
             <span class="task-time">${formatRelativeTime(task.createdAt)}</span>
         </div>
-        <h4 class="task-title">${task.title}</h4>
+        <h4 class="task-title">${escapeHtml(task.title)}</h4>
         ${descHTML}
         <div class="task-footer">
             <div class="card-actions-left">

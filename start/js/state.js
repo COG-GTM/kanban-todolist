@@ -11,10 +11,23 @@ function createDemoTasks() {
     ];
 }
 
+function normalizeTask(task) {
+    return {
+        ...task,
+        desc: task.desc || '',
+        priority: task.priority || 'low',
+        column: task.column || 'todo',
+        editedAt: task.editedAt || null,
+        completed: task.completed === true
+    };
+}
+
 function loadFromStorage() {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
         try { state = JSON.parse(saved); } catch (e) { console.error('Storage loading error:', e); }
+        state.tasks = (state.tasks || []).map(normalizeTask);
+        saveToStorage();
         return;
     }
     state.tasks = createDemoTasks();

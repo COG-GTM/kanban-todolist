@@ -667,3 +667,21 @@ body {
     outline: 2px solid var(--border-focus);
     outline-offset: 2px;
 }
+
+/* ==========================================================================
+   10. NARROW VIEWPORTS
+   ========================================================================== */
+@media (max-width: 720px) {
+    .add-todo-main-row {
+        flex-wrap: wrap;
+    }
+    .row-right-group {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+    .board-container {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
+}
