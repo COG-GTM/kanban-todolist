@@ -9,7 +9,7 @@ function addNewTodo() {
     state.tasks.push({
         id: generateTaskId(),
         title: title,
-        createdAt: new Date().toISOString()
+        createdAt: Date.now()
     });
 
     saveToStorage();
