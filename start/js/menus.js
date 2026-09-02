@@ -60,7 +60,10 @@ function showContextMenu(x, y, taskId, focusFirstItem) {
     menu.style.left = `${Math.min(x, maxX)}px`;
     menu.style.top = `${Math.min(y, maxY)}px`;
 
-    if (focusFirstItem) focusMenuItem(menu, 1);
+    if (focusFirstItem) {
+        setMenuFocusRestore(() => focusTaskCard(taskId));
+        focusMenuItem(menu, 1);
+    }
 }
 
 function handleBadgePriorityKeydown(event, taskId) {
@@ -103,7 +106,10 @@ function openBadgePriorityMenu(event, taskId, focusFirstItem) {
         };
     });
 
-    if (focusFirstItem) focusMenuItem(menu, 1);
+    if (focusFirstItem) {
+        setMenuFocusRestore(() => focusTaskCard(taskId));
+        focusMenuItem(menu, 1);
+    }
 }
 
 function changeTaskPriorityDirectly(taskId, newPriority) {

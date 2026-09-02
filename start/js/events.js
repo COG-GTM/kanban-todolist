@@ -1,8 +1,40 @@
 const KEYBOARD_COLUMN_ORDER = ['todo', 'progress', 'done'];
 
+let menuFocusRestore = null;
+
+function setMenuFocusRestore(restore) {
+    menuFocusRestore = restore;
+}
+
+function runMenuFocusRestore() {
+    const restore = menuFocusRestore;
+    menuFocusRestore = null;
+    if (restore) restore();
+}
+
 function focusTaskCard(taskId) {
     const card = document.querySelector(`.task-card[data-id="${taskId}"]`);
     if (card) card.focus();
+}
+
+function isColumnVisible(column) {
+    const col = document.querySelector(`.board-column[data-column="${column}"]`);
+    return !!col && col.offsetParent !== null;
+}
+
+function setActiveTab(tab) {
+    state.activeTab = tab;
+    saveToStorage();
+    document.querySelectorAll('.mobile-tab-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+    });
+    document.querySelectorAll('.board-column').forEach(col => {
+        col.classList.toggle('active-tab', col.getAttribute('data-column') === tab);
+    });
+}
+
+function revealColumn(column) {
+    if (!isColumnVisible(column)) setActiveTab(column);
 }
 
 function getColumnCards(column) {
@@ -22,8 +54,10 @@ function focusAdjacentColumnCard(task, direction) {
 
     let columnIndex = KEYBOARD_COLUMN_ORDER.indexOf(task.column) + direction;
     while (columnIndex >= 0 && columnIndex < KEYBOARD_COLUMN_ORDER.length) {
-        const targetCards = getColumnCards(KEYBOARD_COLUMN_ORDER[columnIndex]);
+        const targetColumn = KEYBOARD_COLUMN_ORDER[columnIndex];
+        const targetCards = getColumnCards(targetColumn);
         if (targetCards.length > 0) {
+            revealColumn(targetColumn);
             targetCards[Math.min(index, targetCards.length - 1)].focus();
             return;
         }
@@ -33,7 +67,15 @@ function focusAdjacentColumnCard(task, direction) {
 
 function moveTaskWithKeyboard(task, direction) {
     const targetColumn = KEYBOARD_COLUMN_ORDER[KEYBOARD_COLUMN_ORDER.indexOf(task.column) + direction];
-    if (targetColumn) moveTask(task.id, targetColumn);
+    if (!targetColumn) return;
+
+    moveTask(task.id, targetColumn);
+
+    const moved = state.tasks.find(t => t.id === task.id);
+    if (moved && moved.column === targetColumn) {
+        revealColumn(targetColumn);
+        focusTaskCard(task.id);
+    }
 }
 
 function handleTaskCardKeydown(event, task) {
@@ -98,10 +140,45 @@ function setupMenuKeyboardNavigation() {
     });
 }
 
+function trapModalFocus(event) {
+    if (event.key !== 'Tab') return;
+
+    const modal = document.querySelector('.modal-overlay.active');
+    if (!modal) return;
+
+    const focusable = Array.from(modal.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter(el => el.offsetParent !== null);
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (!modal.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
+    } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+    }
+}
+
 function closeOnEscape() {
+    const focusWasInMenu = !!(document.activeElement
+        && document.activeElement.closest
+        && document.activeElement.closest('[role="menu"]'));
+
     hideContextMenu();
     hideBadgePriorityMenu();
     closeHeaderActionsMenu();
+
+    if (focusWasInMenu) {
+        runMenuFocusRestore();
+        return;
+    }
 
     if (document.getElementById('confirmModal').classList.contains('active')) {
         document.getElementById('confirmCancelBtn').click();
@@ -196,6 +273,10 @@ function setupEventListeners() {
         hideBadgePriorityMenu();
         const opened = headerActionsMenu.classList.toggle('hidden') === false;
         headerActionsBtn.setAttribute('aria-expanded', String(opened));
+        if (opened) {
+            setMenuFocusRestore(() => headerActionsBtn.focus());
+            focusMenuItem(headerActionsMenu, 1);
+        }
     });
 
     document.getElementById('actLoadDemo').addEventListener('click', async () => {
@@ -229,13 +310,7 @@ function setupEventListeners() {
 
     document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const tab = btn.getAttribute('data-tab');
-            state.activeTab = tab;
-            saveToStorage();
-            document.querySelectorAll('.mobile-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-            document.querySelectorAll('.board-column').forEach(col => {
-                col.classList.toggle('active-tab', col.getAttribute('data-column') === tab);
-            });
+            setActiveTab(btn.getAttribute('data-tab'));
         });
     });
 
@@ -243,10 +318,12 @@ function setupEventListeners() {
         hideContextMenu();
         hideBadgePriorityMenu();
         closeHeaderActionsMenu();
+        setMenuFocusRestore(null);
     });
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeOnEscape();
+        trapModalFocus(e);
     });
 
     setupMenuKeyboardNavigation();

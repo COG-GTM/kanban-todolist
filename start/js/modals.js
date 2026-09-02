@@ -1,8 +1,22 @@
 const focusBeforeModal = {};
 
+function rememberFocusOrigin(element) {
+    const card = element && element.closest ? element.closest('.task-card') : null;
+    return { element, taskId: card ? card.getAttribute('data-id') : null };
+}
+
+function restoreFocusOrigin(origin) {
+    if (!origin) return;
+    if (origin.element && document.body.contains(origin.element)) {
+        origin.element.focus();
+    } else if (origin.taskId) {
+        focusTaskCard(origin.taskId);
+    }
+}
+
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
-    focusBeforeModal[modalId] = document.activeElement;
+    focusBeforeModal[modalId] = rememberFocusOrigin(document.activeElement);
     modal.classList.add('active');
 
     const firstField = modal.querySelector('input:not([disabled]), textarea:not([disabled]), select:not([disabled]), button');
@@ -13,9 +27,9 @@ function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
     if (modalId === 'taskModal') editingTaskId = null;
 
-    const previous = focusBeforeModal[modalId];
+    const origin = focusBeforeModal[modalId];
     focusBeforeModal[modalId] = null;
-    if (previous && document.body.contains(previous)) previous.focus();
+    restoreFocusOrigin(origin);
 }
 
 let confirmationPending = false;
@@ -34,14 +48,14 @@ function requestConfirmation(title, message) {
         const cancel = document.getElementById('confirmCancelBtn');
         const close = document.getElementById('confirmCloseBtn');
 
-        const focusBeforeConfirm = document.activeElement;
+        const focusBeforeConfirm = rememberFocusOrigin(document.activeElement);
         cancel.focus();
 
         const done = (val) => {
             modal.classList.remove('active');
             cleanup();
             confirmationPending = false;
-            if (focusBeforeConfirm && document.body.contains(focusBeforeConfirm)) focusBeforeConfirm.focus();
+            restoreFocusOrigin(focusBeforeConfirm);
             resolve(val);
         };
         const onYes = () => done(true);
