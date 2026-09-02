@@ -1,3 +1,126 @@
+const KEYBOARD_COLUMN_ORDER = ['todo', 'progress', 'done'];
+
+function focusTaskCard(taskId) {
+    const card = document.querySelector(`.task-card[data-id="${taskId}"]`);
+    if (card) card.focus();
+}
+
+function getColumnCards(column) {
+    return Array.from(document.querySelectorAll(`.board-column[data-column="${column}"] .task-card`));
+}
+
+function focusSiblingCard(task, offset) {
+    const cards = getColumnCards(task.column);
+    const index = cards.findIndex(c => c.getAttribute('data-id') === task.id);
+    const next = cards[index + offset];
+    if (next) next.focus();
+}
+
+function focusAdjacentColumnCard(task, direction) {
+    const cards = getColumnCards(task.column);
+    const index = cards.findIndex(c => c.getAttribute('data-id') === task.id);
+
+    let columnIndex = KEYBOARD_COLUMN_ORDER.indexOf(task.column) + direction;
+    while (columnIndex >= 0 && columnIndex < KEYBOARD_COLUMN_ORDER.length) {
+        const targetCards = getColumnCards(KEYBOARD_COLUMN_ORDER[columnIndex]);
+        if (targetCards.length > 0) {
+            targetCards[Math.min(index, targetCards.length - 1)].focus();
+            return;
+        }
+        columnIndex += direction;
+    }
+}
+
+function moveTaskWithKeyboard(task, direction) {
+    const targetColumn = KEYBOARD_COLUMN_ORDER[KEYBOARD_COLUMN_ORDER.indexOf(task.column) + direction];
+    if (targetColumn) moveTask(task.id, targetColumn);
+}
+
+function handleTaskCardKeydown(event, task) {
+    if (event.target !== event.currentTarget) return;
+
+    const movesTask = event.ctrlKey || event.metaKey;
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        const direction = event.key === 'ArrowRight' ? 1 : -1;
+        if (movesTask) {
+            moveTaskWithKeyboard(task, direction);
+        } else {
+            focusAdjacentColumnCard(task, direction);
+        }
+    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        focusSiblingCard(task, event.key === 'ArrowDown' ? 1 : -1);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openTaskModal(task.id);
+    } else if (event.key === 'Delete') {
+        event.preventDefault();
+        const cards = getColumnCards(task.column);
+        const index = cards.findIndex(c => c.getAttribute('data-id') === task.id);
+        const neighbor = cards[index + 1] || cards[index - 1];
+        const neighborId = neighbor ? neighbor.getAttribute('data-id') : null;
+        deleteTask(task.id).then(() => {
+            const stillThere = document.querySelector(`.task-card[data-id="${task.id}"]`);
+            if (!stillThere && neighborId) focusTaskCard(neighborId);
+        });
+    } else if (event.key === 'ContextMenu') {
+        event.preventDefault();
+        const rect = event.currentTarget.getBoundingClientRect();
+        showContextMenu(rect.left, rect.bottom, task.id, true);
+    }
+}
+
+function focusMenuItem(menu, offset) {
+    const items = Array.from(menu.querySelectorAll('[role="menuitem"]'))
+        .filter(item => !item.classList.contains('hidden') && !item.classList.contains('disabled'));
+    if (items.length === 0) return;
+
+    const current = items.indexOf(document.activeElement);
+    const next = current === -1
+        ? (offset > 0 ? 0 : items.length - 1)
+        : (current + offset + items.length) % items.length;
+    items[next].focus();
+}
+
+function setupMenuKeyboardNavigation() {
+    document.querySelectorAll('[role="menu"]').forEach(menu => {
+        menu.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                focusMenuItem(menu, e.key === 'ArrowDown' ? 1 : -1);
+            } else if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                if (document.activeElement.getAttribute('role') === 'menuitem') document.activeElement.click();
+            }
+        });
+    });
+}
+
+function closeOnEscape() {
+    hideContextMenu();
+    hideBadgePriorityMenu();
+    closeHeaderActionsMenu();
+
+    if (document.getElementById('confirmModal').classList.contains('active')) {
+        document.getElementById('confirmCancelBtn').click();
+        return;
+    }
+    if (document.getElementById('devinModal').classList.contains('active')) {
+        closeDevinModal();
+        return;
+    }
+    if (document.getElementById('taskModal').classList.contains('active')) {
+        closeModal('taskModal');
+    }
+}
+
+function closeHeaderActionsMenu() {
+    document.getElementById('headerActionsMenu').classList.add('hidden');
+    document.getElementById('headerActionsBtn').setAttribute('aria-expanded', 'false');
+}
+
 function setupEventListeners() {
     const titleInput = document.getElementById('todoTitleInput');
     const descInput = document.getElementById('todoDescInput');
@@ -71,11 +194,12 @@ function setupEventListeners() {
         e.stopPropagation();
         hideContextMenu();
         hideBadgePriorityMenu();
-        headerActionsMenu.classList.toggle('hidden');
+        const opened = headerActionsMenu.classList.toggle('hidden') === false;
+        headerActionsBtn.setAttribute('aria-expanded', String(opened));
     });
 
     document.getElementById('actLoadDemo').addEventListener('click', async () => {
-        headerActionsMenu.classList.add('hidden');
+        closeHeaderActionsMenu();
         const ok = await requestConfirmation('Load Sample Data', 'This replaces all current tasks with the sample board. Continue?');
         if (!ok) return;
         loadDemoData();
@@ -84,7 +208,7 @@ function setupEventListeners() {
     });
 
     document.getElementById('actCleanDone').addEventListener('click', async () => {
-        headerActionsMenu.classList.add('hidden');
+        closeHeaderActionsMenu();
         const ok = await requestConfirmation('Clean Done', 'Permanently delete every completed task?');
         if (!ok) return;
         state.tasks = state.tasks.filter(t => !t.completed);
@@ -94,7 +218,7 @@ function setupEventListeners() {
     });
 
     document.getElementById('actCleanAll').addEventListener('click', async () => {
-        headerActionsMenu.classList.add('hidden');
+        closeHeaderActionsMenu();
         const ok = await requestConfirmation('Clean All', 'Permanently delete every task on the board?');
         if (!ok) return;
         state.tasks = [];
@@ -118,8 +242,14 @@ function setupEventListeners() {
     document.addEventListener('click', () => {
         hideContextMenu();
         hideBadgePriorityMenu();
-        headerActionsMenu.classList.add('hidden');
+        closeHeaderActionsMenu();
     });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeOnEscape();
+    });
+
+    setupMenuKeyboardNavigation();
 
     const modalTitleInput = document.getElementById('taskTitleInput');
     const modalDescInput = document.getElementById('taskDescInput');

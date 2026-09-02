@@ -6,7 +6,7 @@ function hideBadgePriorityMenu() {
     document.getElementById('badgePriorityMenu').classList.add('hidden');
 }
 
-function showContextMenu(x, y, taskId) {
+function showContextMenu(x, y, taskId, focusFirstItem) {
     const task = state.tasks.find(t => t.id === taskId);
     if (!task) return;
 
@@ -35,6 +35,7 @@ function showContextMenu(x, y, taskId) {
     const run = (action) => (e) => {
         if (e.currentTarget.classList.contains('disabled')) return;
         hideContextMenu();
+        focusTaskCard(taskId);
         action();
     };
 
@@ -58,9 +59,17 @@ function showContextMenu(x, y, taskId) {
     const maxY = window.innerHeight - menu.offsetHeight - 8;
     menu.style.left = `${Math.min(x, maxX)}px`;
     menu.style.top = `${Math.min(y, maxY)}px`;
+
+    if (focusFirstItem) focusMenuItem(menu, 1);
 }
 
-function openBadgePriorityMenu(event, taskId) {
+function handleBadgePriorityKeydown(event, taskId) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    openBadgePriorityMenu(event, taskId, true);
+}
+
+function openBadgePriorityMenu(event, taskId, focusFirstItem) {
     event.stopPropagation();
 
     const task = state.tasks.find(t => t.id === taskId);
@@ -89,9 +98,12 @@ function openBadgePriorityMenu(event, taskId) {
         item.onclick = (e) => {
             e.stopPropagation();
             hideBadgePriorityMenu();
+            focusTaskCard(taskId);
             changeTaskPriorityDirectly(taskId, item.getAttribute('data-priority'));
         };
     });
+
+    if (focusFirstItem) focusMenuItem(menu, 1);
 }
 
 function changeTaskPriorityDirectly(taskId, newPriority) {

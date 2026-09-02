@@ -32,12 +32,12 @@
                     <option value="title-asc">Title (A-Z)</option>
                 </select>
                 <div class="header-actions-dropdown">
-                    <button id="headerActionsBtn" class="btn-bulk-neutral" title="Board actions"><i class="fas fa-ellipsis-h"></i> Actions</button>
-                    <div class="header-actions-menu hidden" id="headerActionsMenu">
-                        <div class="context-menu-item" id="actLoadDemo"><i class="fas fa-wand-magic-sparkles"></i> Load Sample Data</div>
+                    <button id="headerActionsBtn" class="btn-bulk-neutral" title="Board actions" aria-haspopup="menu" aria-expanded="false" aria-controls="headerActionsMenu"><i class="fas fa-ellipsis-h"></i> Actions</button>
+                    <div class="header-actions-menu hidden" id="headerActionsMenu" role="menu" aria-label="Board actions">
+                        <div class="context-menu-item" id="actLoadDemo" role="menuitem" tabindex="-1"><i class="fas fa-wand-magic-sparkles"></i> Load Sample Data</div>
                         <div class="context-divider"></div>
-                        <div class="context-menu-item" id="actCleanDone"><i class="fas fa-check-double"></i> Clean Done</div>
-                        <div class="context-menu-item danger" id="actCleanAll"><i class="fas fa-trash-alt"></i> Clean All</div>
+                        <div class="context-menu-item" id="actCleanDone" role="menuitem" tabindex="-1"><i class="fas fa-check-double"></i> Clean Done</div>
+                        <div class="context-menu-item danger" id="actCleanAll" role="menuitem" tabindex="-1"><i class="fas fa-trash-alt"></i> Clean All</div>
                     </div>
                 </div>
             </div>
@@ -67,43 +67,48 @@
             </div>
         </section>
 
-        <nav class="mobile-board-tabs" id="mobileTabs">
+        <nav class="mobile-board-tabs" id="mobileTabs" aria-label="Board columns">
             <button class="mobile-tab-btn active" data-tab="todo">To Do <span class="badge" id="todoTabBadge">0</span></button>
             <button class="mobile-tab-btn" data-tab="progress">In Progress <span class="badge" id="progressTabBadge">0</span></button>
             <button class="mobile-tab-btn" data-tab="done">Done <span class="badge" id="doneTabBadge">0</span></button>
         </nav>
 
-        <main class="board-container">
-            <section class="board-column active-tab" id="columnTodo" data-column="todo">
+        <p class="sr-only" id="boardKeyboardHelp">
+            Use the arrow keys to move between task cards, Control plus the left or right arrow key to
+            move the focused task to another column, Enter to open it, and Delete to remove it.
+        </p>
+
+        <main class="board-container" aria-describedby="boardKeyboardHelp">
+            <section class="board-column active-tab" id="columnTodo" data-column="todo" aria-labelledby="columnTodoHeading">
                 <header class="column-header">
-                    <div class="column-title-group"><span class="column-dot todo"></span><h3>To Do</h3></div>
+                    <div class="column-title-group"><span class="column-dot todo"></span><h3 id="columnTodoHeading">To Do</h3></div>
                     <span class="column-count" id="countTodo">0</span>
                 </header>
-                <div class="column-body no-scrollbar" id="bodyTodo"></div>
+                <div class="column-body no-scrollbar" id="bodyTodo" role="list" aria-label="To Do tasks"></div>
             </section>
-            <section class="board-column" id="columnProgress" data-column="progress">
+            <section class="board-column" id="columnProgress" data-column="progress" aria-labelledby="columnProgressHeading">
                 <header class="column-header">
-                    <div class="column-title-group"><span class="column-dot progress"></span><h3>In Progress</h3></div>
+                    <div class="column-title-group"><span class="column-dot progress"></span><h3 id="columnProgressHeading">In Progress</h3></div>
                     <span class="column-count" id="countProgress">0</span>
                 </header>
-                <div class="column-body no-scrollbar" id="bodyProgress"></div>
+                <div class="column-body no-scrollbar" id="bodyProgress" role="list" aria-label="In Progress tasks"></div>
             </section>
-            <section class="board-column col-done" id="columnDone" data-column="done">
+            <section class="board-column col-done" id="columnDone" data-column="done" aria-labelledby="columnDoneHeading">
                 <header class="column-header">
-                    <div class="column-title-group"><span class="column-dot done"></span><h3>Done</h3></div>
+                    <div class="column-title-group"><span class="column-dot done"></span><h3 id="columnDoneHeading">Done</h3></div>
                     <span class="column-count" id="countDone">0</span>
                 </header>
-                <div class="column-body no-scrollbar" id="bodyDone"></div>
+                <div class="column-body no-scrollbar" id="bodyDone" role="list" aria-label="Done tasks"></div>
             </section>
         </main>
     </div>
 
     <!-- TASK VIEW / EDIT MODAL -->
     <div class="modal-overlay" id="taskModal">
-        <div class="modal-container">
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
             <header class="modal-header">
                 <h3 id="taskModalTitle">Task Details</h3>
-                <button class="btn-modal-close" onclick="closeModal('taskModal')">
+                <button class="btn-modal-close" onclick="closeModal('taskModal')" aria-label="Close task details">
                     <i class="fas fa-times"></i>
                 </button>
             </header>
@@ -150,10 +155,10 @@
 
     <!-- CONFIRMATION DIALOG -->
     <div class="modal-overlay" id="confirmModal">
-        <div class="modal-container" style="max-width: 380px;">
+        <div class="modal-container" style="max-width: 380px;" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle" aria-describedby="confirmModalMessage">
             <header class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h3 id="confirmModalTitle">Are you sure?</h3>
-                <button class="btn-modal-close" id="confirmCloseBtn">
+                <button class="btn-modal-close" id="confirmCloseBtn" aria-label="Cancel">
                     <i class="fas fa-times"></i>
                 </button>
             </header>
@@ -168,10 +173,10 @@
     </div>
 
     <div class="modal-overlay" id="devinModal">
-        <div class="modal-container">
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="devinModalHeading">
             <header class="modal-header">
-                <h3><i class="fas fa-robot"></i> Run with Devin</h3>
-                <button class="btn-modal-close" onclick="closeDevinModal()"><i class="fas fa-times"></i></button>
+                <h3 id="devinModalHeading"><i class="fas fa-robot"></i> Run with Devin</h3>
+                <button class="btn-modal-close" onclick="closeDevinModal()" aria-label="Close Run with Devin"><i class="fas fa-times"></i></button>
             </header>
             <div class="modal-body">
                 <div class="form-group">
@@ -190,27 +195,27 @@
         </div>
     </div>
 
-    <div class="custom-context-menu hidden" id="contextMenu">
-        <div class="context-menu-item" id="ctxView"><i class="fas fa-expand-alt"></i> View Details</div>
-        <div class="context-menu-item" id="ctxEdit"><i class="fas fa-pencil-alt"></i> Edit Task</div>
+    <div class="custom-context-menu hidden" id="contextMenu" role="menu" aria-label="Task actions">
+        <div class="context-menu-item" id="ctxView" role="menuitem" tabindex="-1"><i class="fas fa-expand-alt"></i> View Details</div>
+        <div class="context-menu-item" id="ctxEdit" role="menuitem" tabindex="-1"><i class="fas fa-pencil-alt"></i> Edit Task</div>
         <div class="context-divider"></div>
-        <div class="context-menu-item" id="ctxMoveTodo"><i class="fas fa-list-check"></i> Move to To Do</div>
-        <div class="context-menu-item" id="ctxMoveProgress"><i class="fas fa-spinner"></i> Move to Progress</div>
-        <div class="context-menu-item" id="ctxMoveDone"><i class="fas fa-check-double"></i> Move to Done</div>
+        <div class="context-menu-item" id="ctxMoveTodo" role="menuitem" tabindex="-1"><i class="fas fa-list-check"></i> Move to To Do</div>
+        <div class="context-menu-item" id="ctxMoveProgress" role="menuitem" tabindex="-1"><i class="fas fa-spinner"></i> Move to Progress</div>
+        <div class="context-menu-item" id="ctxMoveDone" role="menuitem" tabindex="-1"><i class="fas fa-check-double"></i> Move to Done</div>
         <div class="context-divider hidden" id="ctxDevinDivider"></div>
-        <div class="context-menu-item hidden" id="ctxRunDevin"><i class="fas fa-robot"></i> Run with Devin</div>
-        <div class="context-menu-item hidden" id="ctxOpenDevin"><i class="fas fa-arrow-up-right-from-square"></i> Open Devin session</div>
+        <div class="context-menu-item hidden" id="ctxRunDevin" role="menuitem" tabindex="-1"><i class="fas fa-robot"></i> Run with Devin</div>
+        <div class="context-menu-item hidden" id="ctxOpenDevin" role="menuitem" tabindex="-1"><i class="fas fa-arrow-up-right-from-square"></i> Open Devin session</div>
         <div class="context-divider"></div>
-        <div class="context-menu-item danger" id="ctxDelete"><i class="fas fa-trash-alt"></i> Delete Task</div>
+        <div class="context-menu-item danger" id="ctxDelete" role="menuitem" tabindex="-1"><i class="fas fa-trash-alt"></i> Delete Task</div>
     </div>
 
-    <div class="badge-dropdown-menu hidden" id="badgePriorityMenu">
-        <div class="badge-dropdown-item" data-priority="low"><span class="badge-priority low">low</span></div>
-        <div class="badge-dropdown-item" data-priority="medium"><span class="badge-priority medium">medium</span></div>
-        <div class="badge-dropdown-item" data-priority="high"><span class="badge-priority high">high</span></div>
+    <div class="badge-dropdown-menu hidden" id="badgePriorityMenu" role="menu" aria-label="Set priority">
+        <div class="badge-dropdown-item" data-priority="low" role="menuitem" tabindex="-1"><span class="badge-priority low">low</span></div>
+        <div class="badge-dropdown-item" data-priority="medium" role="menuitem" tabindex="-1"><span class="badge-priority medium">medium</span></div>
+        <div class="badge-dropdown-item" data-priority="high" role="menuitem" tabindex="-1"><span class="badge-priority high">high</span></div>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
 
     <script src="js/state.js"></script>
     <script src="js/utils.js"></script>

@@ -25,6 +25,12 @@ function getVisibleTasks() {
 }
 
 function render() {
+    const focusedTaskId = document.activeElement
+        && document.activeElement.closest
+        && document.activeElement.closest('.task-card')
+        ? document.activeElement.closest('.task-card').getAttribute('data-id')
+        : null;
+
     const bodyTodo = document.getElementById('bodyTodo');
     const bodyProgress = document.getElementById('bodyProgress');
     const bodyDone = document.getElementById('bodyDone');
@@ -59,6 +65,8 @@ function render() {
     checkEmptyState('todo', bodyTodo, counts.todo);
     checkEmptyState('progress', bodyProgress, counts.progress);
     checkEmptyState('done', bodyDone, counts.done);
+
+    if (focusedTaskId) focusTaskCard(focusedTaskId);
 }
 
 function checkEmptyState(columnName, element, count) {
@@ -75,7 +83,7 @@ function checkEmptyState(columnName, element, count) {
     }
 
     element.innerHTML = `
-        <div class="empty-column-placeholder">
+        <div class="empty-column-placeholder" role="presentation">
             <i class="fas ${icon}"></i>
             <p>${msg}</p>
         </div>
@@ -95,6 +103,10 @@ function createTaskCardDOM(task) {
     const card = document.createElement('article');
     card.className = `task-card priority-${task.priority}`;
     card.setAttribute('data-id', task.id);
+    card.setAttribute('role', 'listitem');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', `${task.title}. ${task.priority} priority. Column: ${COLUMN_LABELS[task.column]}.`);
+    card.setAttribute('aria-describedby', 'boardKeyboardHelp');
 
     const isTodo = task.column === 'todo';
     const isProgress = task.column === 'progress';
@@ -106,22 +118,22 @@ function createTaskCardDOM(task) {
 
     let navArrowsHTML = '';
     if (isTodo) {
-        navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move to Progress"><i class="fas fa-arrow-right"></i></button>`;
+        navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move to Progress" aria-label="Move to In Progress"><i class="fas fa-arrow-right"></i></button>`;
     } else if (isProgress) {
         navArrowsHTML = `
-            <button class="btn-arrow" onclick="moveTask('${task.id}', 'todo')" title="Move back to To Do"><i class="fas fa-arrow-left"></i></button>
-            <button class="btn-arrow" onclick="moveTask('${task.id}', 'done')" title="Move to Done"><i class="fas fa-arrow-right"></i></button>
+            <button class="btn-arrow" onclick="moveTask('${task.id}', 'todo')" title="Move back to To Do" aria-label="Move back to To Do"><i class="fas fa-arrow-left"></i></button>
+            <button class="btn-arrow" onclick="moveTask('${task.id}', 'done')" title="Move to Done" aria-label="Move to Done"><i class="fas fa-arrow-right"></i></button>
         `;
     } else if (isDone) {
-        navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move back to In Progress"><i class="fas fa-arrow-left"></i></button>`;
+        navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move back to In Progress" aria-label="Move back to In Progress"><i class="fas fa-arrow-left"></i></button>`;
     }
 
     let devinButton = '';
     if (devinEnabled) {
         if (task.devinSessionId) {
-            devinButton = `<button class="btn-card-action btn-devin-open" onclick="openDevinSession('${task.id}')" title="Open Devin session"><i class="fas fa-arrow-up-right-from-square"></i></button>`;
+            devinButton = `<button class="btn-card-action btn-devin-open" onclick="openDevinSession('${task.id}')" title="Open Devin session" aria-label="Open Devin session"><i class="fas fa-arrow-up-right-from-square"></i></button>`;
         } else if (isTodo) {
-            devinButton = `<button class="btn-card-action btn-devin" onclick="openDevinModal('${task.id}')" title="Run with Devin"><i class="fas fa-robot"></i></button>`;
+            devinButton = `<button class="btn-card-action btn-devin" onclick="openDevinModal('${task.id}')" title="Run with Devin" aria-label="Run with Devin"><i class="fas fa-robot"></i></button>`;
         }
     }
 
@@ -140,11 +152,11 @@ function createTaskCardDOM(task) {
         devinPill = `<span class="devin-status-pill ${stateClass}${clickAttrs}><i class="fas ${icon}"></i> ${escapeHtml(devinStatusLabel(task))}</span>`;
     }
 
-    const editButton = `<button class="btn-card-action" onclick="openTaskModal('${task.id}')" title="${isDone ? 'View Task' : 'Edit Task'}"><i class="fas ${isDone ? 'fa-expand-alt' : 'fa-pencil-alt'}"></i></button>`;
+    const editButton = `<button class="btn-card-action" onclick="openTaskModal('${task.id}')" title="${isDone ? 'View Task' : 'Edit Task'}" aria-label="${isDone ? 'View task' : 'Edit task'}"><i class="fas ${isDone ? 'fa-expand-alt' : 'fa-pencil-alt'}"></i></button>`;
 
     card.innerHTML = `
         <div class="task-header">
-            <span class="badge-priority ${task.priority}" onclick="openBadgePriorityMenu(event, '${task.id}')">${task.priority}</span>
+            <span class="badge-priority ${task.priority}" role="button" tabindex="0" aria-haspopup="menu" aria-label="Priority ${task.priority}. Change priority" onclick="openBadgePriorityMenu(event, '${task.id}')" onkeydown="handleBadgePriorityKeydown(event, '${task.id}')">${task.priority}</span>
             ${devinPill}
             <span class="task-time">${formatRelativeTime(task.createdAt)}</span>
         </div>
@@ -154,7 +166,7 @@ function createTaskCardDOM(task) {
             <div class="card-actions-left">
                 ${editButton}
                 ${devinButton}
-                <button class="btn-card-action" onclick="deleteTask('${task.id}')" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn-card-action" onclick="deleteTask('${task.id}')" title="Delete Task" aria-label="Delete task"><i class="fas fa-trash-alt"></i></button>
             </div>
             <div class="card-nav-arrows">
                 ${navArrowsHTML}
@@ -170,6 +182,8 @@ function createTaskCardDOM(task) {
         });
         card.addEventListener('dragend', () => card.classList.remove('dragging'));
     }
+
+    card.addEventListener('keydown', (e) => handleTaskCardKeydown(e, task));
 
     card.addEventListener('contextmenu', (e) => {
         e.preventDefault();
