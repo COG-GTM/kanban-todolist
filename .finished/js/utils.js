@@ -1,4 +1,16 @@
         // ==========================================
+        // HTML ESCAPING FOR USER-SUPPLIED TEXT
+        // ==========================================
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ==========================================
         // ARCHITECTURAL TIME & DATE PARSING CONVERSIONS
         // ==========================================
         function formatRelativeTime(timestamp) {

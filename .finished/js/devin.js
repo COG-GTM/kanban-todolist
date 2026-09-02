@@ -187,7 +187,7 @@
                         task.column = 'done';
                         task.editedAt = Date.now();
                         changed = true;
-                        showToast(`Devin finished "${task.title}" — moved to Done.`, 'success');
+                        showToast(`Devin finished "${escapeHtml(task.title)}" — moved to Done.`, 'success');
                     }
                 } catch (e) {
                     // Backend unreachable (e.g. opened via file://) — skip this round silently.
