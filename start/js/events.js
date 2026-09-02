@@ -33,4 +33,17 @@ function setupEventListeners() {
         descCounter.textContent = `${remaining} left`;
         descCounter.style.color = remaining < 15 ? 'var(--priority-high-border)' : 'var(--text-muted)';
     });
+
+    const modalTitleInput = document.getElementById('taskTitleInput');
+    const modalDescInput = document.getElementById('taskDescInput');
+
+    document.getElementById('saveEditBtn').addEventListener('click', saveEditedTask);
+
+    modalTitleInput.addEventListener('input', () => {
+        document.getElementById('taskTitleCounter').textContent = `${40 - modalTitleInput.value.length} left`;
+    });
+
+    modalDescInput.addEventListener('input', () => {
+        document.getElementById('taskDescCounter').textContent = `${150 - modalDescInput.value.length} left`;
+    });
 }

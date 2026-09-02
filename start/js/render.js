@@ -52,6 +52,15 @@ function checkEmptyState(columnName, element, count) {
     `;
 }
 
+function renderTimestampsOnly() {
+    state.tasks.forEach(task => {
+        const badge = document.querySelector(`.task-card[data-id="${task.id}"] .task-time`);
+        if (badge) {
+            badge.textContent = formatRelativeTime(task.createdAt);
+        }
+    });
+}
+
 function createTaskCardDOM(task) {
     const card = document.createElement('article');
     card.className = `task-card priority-${task.priority}`;
@@ -77,14 +86,18 @@ function createTaskCardDOM(task) {
         navArrowsHTML = `<button class="btn-arrow" onclick="moveTask('${task.id}', 'progress')" title="Move back to In Progress"><i class="fas fa-arrow-left"></i></button>`;
     }
 
+    const editButton = `<button class="btn-card-action" onclick="openTaskModal('${task.id}')" title="${isDone ? 'View Task' : 'Edit Task'}"><i class="fas ${isDone ? 'fa-expand-alt' : 'fa-pencil-alt'}"></i></button>`;
+
     card.innerHTML = `
         <div class="task-header">
             <span class="badge-priority ${task.priority}">${task.priority}</span>
+            <span class="task-time">${formatRelativeTime(task.createdAt)}</span>
         </div>
         <h4 class="task-title">${task.title}</h4>
         ${descHTML}
         <div class="task-footer">
             <div class="card-actions-left">
+                ${editButton}
                 <button class="btn-card-action" onclick="deleteTask('${task.id}')" title="Delete Task"><i class="fas fa-trash-alt"></i></button>
             </div>
             <div class="card-nav-arrows">
