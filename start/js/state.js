@@ -17,6 +17,7 @@ function normalizeTask(task) {
         desc: task.desc || '',
         priority: task.priority || 'low',
         column: task.column || 'todo',
+        createdAt: typeof task.createdAt === 'string' ? new Date(task.createdAt).getTime() : task.createdAt,
         editedAt: task.editedAt || null,
         completed: task.completed === true
     };
@@ -25,7 +26,12 @@ function normalizeTask(task) {
 function loadFromStorage() {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
-        try { state = JSON.parse(saved); } catch (e) { console.error('Storage loading error:', e); }
+        try {
+            state = JSON.parse(saved);
+        } catch (e) {
+            console.error('Storage loading error:', e);
+            return;
+        }
         state.tasks = (state.tasks || []).map(normalizeTask);
         saveToStorage();
         return;

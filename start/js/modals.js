@@ -7,7 +7,12 @@ function closeModal(modalId) {
     if (modalId === 'taskModal') editingTaskId = null;
 }
 
+let confirmationPending = false;
+
 function requestConfirmation(title, message) {
+    if (confirmationPending) return Promise.resolve(false);
+    confirmationPending = true;
+
     return new Promise((resolve) => {
         const modal = document.getElementById('confirmModal');
         document.getElementById('confirmModalTitle').textContent = title;
@@ -18,7 +23,7 @@ function requestConfirmation(title, message) {
         const cancel = document.getElementById('confirmCancelBtn');
         const close = document.getElementById('confirmCloseBtn');
 
-        const done = (val) => { modal.classList.remove('active'); cleanup(); resolve(val); };
+        const done = (val) => { modal.classList.remove('active'); cleanup(); confirmationPending = false; resolve(val); };
         const onYes = () => done(true);
         const onNo = () => done(false);
 
