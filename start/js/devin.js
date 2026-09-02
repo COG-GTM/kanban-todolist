@@ -126,12 +126,13 @@ async function pollDevinSessions() {
 
             const status = session.status || task.devinStatus;
             const detail = session.status_enum || session.status_detail || task.devinStatusDetail;
-            if (status === task.devinStatus && detail === task.devinStatusDetail) continue;
+            const needsCompletion = isDevinComplete(status, detail) && task.column === 'progress';
+            if (status === task.devinStatus && detail === task.devinStatusDetail && !needsCompletion) continue;
 
             task.devinStatus = status;
             task.devinStatusDetail = detail;
 
-            if (isDevinComplete(status, detail) && task.column === 'progress') {
+            if (needsCompletion) {
                 task.column = 'done';
                 task.completed = true;
                 showToast(`Devin finished "${task.title}".`, 'success');
