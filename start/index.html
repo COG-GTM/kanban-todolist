@@ -14,7 +14,24 @@
     <div class="app-card" id="appCard">
         <header class="app-header">
             <div class="logo"><span class="todo-text">Daily</span><span class="list-text"> Task Tracker</span></div>
-            <div class="header-controls"></div>
+            <div class="header-controls">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search tasks...">
+                </div>
+                <select id="priorityFilter" class="select-filter">
+                    <option value="all">All Priorities</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <select id="sortBySelect" class="select-filter">
+                    <option value="date-desc">Newest First</option>
+                    <option value="date-asc">Oldest First</option>
+                    <option value="priority-desc">Highest Priority</option>
+                    <option value="title-asc">Title (A-Z)</option>
+                </select>
+            </div>
         </header>
 
         <section class="add-todo-wrapper">

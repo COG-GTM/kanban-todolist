@@ -1,3 +1,29 @@
+function getVisibleTasks() {
+    let filteredTasks = [...state.tasks];
+
+    if (state.searchQuery) {
+        const q = state.searchQuery.toLowerCase();
+        filteredTasks = filteredTasks.filter(t =>
+            t.title.toLowerCase().includes(q) || (t.desc || '').toLowerCase().includes(q));
+    }
+    if (state.filterPriority !== 'all') {
+        filteredTasks = filteredTasks.filter(t => t.priority === state.filterPriority);
+    }
+
+    filteredTasks.sort((a, b) => {
+        if (state.sortBy === 'date-desc') return b.createdAt - a.createdAt;
+        if (state.sortBy === 'date-asc') return a.createdAt - b.createdAt;
+        if (state.sortBy === 'priority-desc') {
+            const w = { high: 3, medium: 2, low: 1 };
+            return w[b.priority] - w[a.priority];
+        }
+        if (state.sortBy === 'title-asc') return a.title.localeCompare(b.title);
+        return 0;
+    });
+
+    return filteredTasks;
+}
+
 function render() {
     const bodyTodo = document.getElementById('bodyTodo');
     const bodyProgress = document.getElementById('bodyProgress');
@@ -9,7 +35,7 @@ function render() {
 
     const counts = { todo: 0, progress: 0, done: 0 };
 
-    state.tasks.forEach(task => {
+    getVisibleTasks().forEach(task => {
         counts[task.column]++;
         const card = createTaskCardDOM(task);
 

@@ -445,6 +445,36 @@ body {
 }
 .select-filter:focus { border-color: var(--border-focus); }
 
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.search-wrapper i {
+    position: absolute;
+    left: 11px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+.search-input {
+    width: 160px;
+    padding: 7px 10px 7px 30px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: var(--transition-smooth);
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus {
+    width: 210px;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
 .add-todo-desc-row {
     max-height: 0;
     opacity: 0;

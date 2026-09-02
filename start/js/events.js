@@ -34,6 +34,23 @@ function setupEventListeners() {
         descCounter.style.color = remaining < 15 ? 'var(--priority-high-border)' : 'var(--text-muted)';
     });
 
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        state.searchQuery = e.target.value.trim();
+        render();
+    });
+
+    document.getElementById('priorityFilter').addEventListener('change', (e) => {
+        state.filterPriority = e.target.value;
+        saveToStorage();
+        render();
+    });
+
+    document.getElementById('sortBySelect').addEventListener('change', (e) => {
+        state.sortBy = e.target.value;
+        saveToStorage();
+        render();
+    });
+
     const modalTitleInput = document.getElementById('taskTitleInput');
     const modalDescInput = document.getElementById('taskDescInput');
 
