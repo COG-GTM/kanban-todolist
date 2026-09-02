@@ -12,6 +12,8 @@ const API_KEY = process.env.DEVIN_API_KEY;
 const ORG_ID = process.env.DEVIN_ORG_ID;
 const USER_EMAIL = process.env.DEVIN_USER_EMAIL;
 const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || '127.0.0.1';
+const MAX_UPSTREAM_BYTES = 5 * 1024 * 1024;
 
 let cachedUserId = null;
 
@@ -92,7 +94,13 @@ function devinRequest(method, requestPath, body) {
 
         const req = https.request({ host: DEVIN_HOST, method, path: requestPath, headers }, apiRes => {
             let raw = '';
-            apiRes.on('data', chunk => { raw += chunk; });
+            apiRes.on('data', chunk => {
+                raw += chunk;
+                if (raw.length > MAX_UPSTREAM_BYTES) {
+                    apiRes.destroy();
+                    reject(new Error('Devin API response was too large.'));
+                }
+            });
             apiRes.on('end', () => {
                 let parsed = null;
                 try {
@@ -119,8 +127,10 @@ async function resolveUserId() {
         throw new Error(`Could not resolve Devin user for ${USER_EMAIL} (status ${statusCode})`);
     }
 
-    const users = Array.isArray(body) ? body : (body && (body.users || body.data || body.members)) || [];
-    const user = Array.isArray(users) ? users[0] : users;
+    const users = Array.isArray(body) ? body : (body && (body.items || body.users || body.data || body.members)) || [];
+    const user = Array.isArray(users)
+        ? users.find(u => u.email && u.email.toLowerCase() === USER_EMAIL.toLowerCase()) || users[0]
+        : users;
     const userId = user && (user.user_id || user.id);
     if (!userId) throw new Error(`No Devin user found for ${USER_EMAIL}`);
 
@@ -191,6 +201,17 @@ function serveStatic(req, res, pathname) {
         return;
     }
 
+    fs.stat(filePath, (statErr, stats) => {
+        if (statErr || !stats.isFile()) {
+            res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+            res.end('Not found');
+            return;
+        }
+        readAndSend(res, filePath);
+    });
+}
+
+function readAndSend(res, filePath) {
     fs.readFile(filePath, (err, data) => {
         if (err) {
             res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -215,8 +236,8 @@ const server = http.createServer((req, res) => {
     serveStatic(req, res, pathname);
 });
 
-server.listen(PORT, () => {
-    console.log(`Daily Task Tracker running at http://localhost:${PORT}`);
+server.listen(PORT, HOST, () => {
+    console.log(`Daily Task Tracker running at http://${HOST}:${PORT}`);
     console.log(devinEnabled()
         ? 'Devin integration: enabled'
         : 'Devin integration: disabled (copy .env.example to .env to enable)');

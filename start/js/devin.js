@@ -37,7 +37,8 @@ function closeDevinModal() {
 }
 
 async function confirmDevinKickoff() {
-    const task = state.tasks.find(t => t.id === devinKickoffTaskId);
+    const taskId = devinKickoffTaskId;
+    const task = state.tasks.find(t => t.id === taskId);
     if (!task) return;
 
     const prompt = document.getElementById('devinPromptInput').value.trim();
@@ -62,11 +63,17 @@ async function confirmDevinKickoff() {
             return;
         }
 
-        task.devinSessionId = data.session_id;
-        task.devinSessionUrl = data.url;
-        task.devinStatus = data.status || 'running';
-        task.column = 'progress';
-        task.completed = false;
+        const liveTask = state.tasks.find(t => t.id === taskId);
+        if (!liveTask) {
+            showToast('The task was removed before its Devin session started.', 'warning');
+            return;
+        }
+
+        liveTask.devinSessionId = data.session_id;
+        liveTask.devinSessionUrl = data.url;
+        liveTask.devinStatus = data.status || 'running';
+        liveTask.column = 'progress';
+        liveTask.completed = false;
 
         saveToStorage();
         closeDevinModal();
@@ -117,10 +124,14 @@ async function pollDevinSessions() {
             if (!res.ok) continue;
             const session = await res.json();
 
-            task.devinStatus = session.status || task.devinStatus;
-            task.devinStatusDetail = session.status_enum || session.status_detail || task.devinStatusDetail;
+            const status = session.status || task.devinStatus;
+            const detail = session.status_enum || session.status_detail || task.devinStatusDetail;
+            if (status === task.devinStatus && detail === task.devinStatusDetail) continue;
 
-            if (isDevinComplete(task.devinStatus, task.devinStatusDetail) && task.column === 'progress') {
+            task.devinStatus = status;
+            task.devinStatusDetail = detail;
+
+            if (isDevinComplete(status, detail) && task.column === 'progress') {
                 task.column = 'done';
                 task.completed = true;
                 showToast(`Devin finished "${task.title}".`, 'success');
