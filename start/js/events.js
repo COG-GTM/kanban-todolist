@@ -194,8 +194,13 @@ function closeOnEscape() {
 }
 
 function closeHeaderActionsMenu() {
-    document.getElementById('headerActionsMenu').classList.add('hidden');
-    document.getElementById('headerActionsBtn').setAttribute('aria-expanded', 'false');
+    const menu = document.getElementById('headerActionsMenu');
+    const btn = document.getElementById('headerActionsBtn');
+
+    if (menu.contains(document.activeElement)) btn.focus();
+
+    menu.classList.add('hidden');
+    btn.setAttribute('aria-expanded', 'false');
 }
 
 function setupEventListeners() {
